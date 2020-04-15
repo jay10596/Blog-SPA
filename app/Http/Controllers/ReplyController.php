@@ -21,31 +21,29 @@ class ReplyController extends Controller
     
     public function show(Question $question, Reply $reply)
     {
-        return new ReplyResource($reply);
+        //
     }
     
     public function store(Question $question, Request $request)
     {
-        $reply = Reply::create([
-            'body' => $request->body,
-            'question_id' => $question->id,
-            'user_id' =>auth()->user()->id,
-        ]);
+        $request['user_id'] = auth()->user()->id;
 
-        return response(['reply' => new ReplyResource($reply)], 201);
+        $reply = $question->replies()->create($request->all());
+
+        return (new ReplyResource($reply))->response()->setStatusCode(201);
     }
     
     public function update(Question $question, Request $request, Reply $reply)
     {
         $reply->update($request->all());
         
-        return response('Updated', 202);
+        return (new ReplyResource($reply))->response()->setStatusCode(202);
     }
     
     public function destroy(Question $question,Reply $reply)
     {
         $reply->delete();
         
-        return response('Deleted', 201);
+        return response('Deleted', 204);
     }
 }

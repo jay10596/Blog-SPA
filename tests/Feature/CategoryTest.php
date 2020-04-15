@@ -17,7 +17,7 @@ class CategoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $user;
+    protected $admin;
     protected $token;
     protected $server;
 
@@ -55,8 +55,8 @@ class CategoryTest extends TestCase
         $this->assertCount(2, Category::all());
 
 
-        $category = Category::all();
-        $category = $category[1];
+        $categories = Category::all();
+        $category = $categories[1];
 
         $this->assertEquals('Test Category', $category->name);
     
