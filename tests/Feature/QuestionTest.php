@@ -49,7 +49,7 @@ class QuestionTest extends TestCase
         return [
             'title' => 'Test Question',
             'body' => 'This is a new question.',
-            'category_id' => '3'
+            'category_id' => 1
         ];
     }
 
@@ -62,12 +62,25 @@ class QuestionTest extends TestCase
 
         $this->assertCount(2, Question::all());
 
+
         $questions = Question::all();
         $question = $questions[1];
 
         $this->assertEquals('Test Question', $question->title);
         $this->assertEquals('This is a new question.', $question->body);
-        $this->assertEquals('3', $question->category_id);
+        $this->assertEquals(1, $question->category_id);
+    
+    
+        $response->assertJson([
+            'data' => [
+                'title' => $question->title,
+                'path' => $question->path,
+                'body' => $question->body,
+                'created_at' => $question->created_at->diffForHumans(),
+                'user_name' => $question->user->name,
+                'category_name' => $question->category->name,
+            ],
+        ]);
     }
 
     /** @test */
@@ -88,6 +101,25 @@ class QuestionTest extends TestCase
         $response->assertStatus(202);
 
         $this->assertCount(1, Question::all());
+
+
+        $this->question = $this->question->fresh();
+
+        $this->assertEquals('Test Question', $this->question->title);
+        $this->assertEquals('This is a new question.', $this->question->body);
+        $this->assertEquals(1, $this->question->category_id);
+
+
+        $response->assertJson([
+            'data' => [
+                'title' => $this->question->title,
+                'path' => $this->question->path,
+                'body' => $this->question->body,
+                'created_at' => $this->question->created_at->diffForHumans(),
+                'user_name' => $this->question->user->name,
+                'category_name' => $this->question->category->name,
+            ],
+        ]);
     }
 
     /** @test */
@@ -96,7 +128,11 @@ class QuestionTest extends TestCase
         $response = $this->put('/api/questions' . $this->question->slug, $this->data(), array_merge($this->server, ['HTTP_Authorization' => '']));
         
         $response->assertStatus(404);
+        
+        $this->assertCount(1, Question::all());
 
+        $this->assertNotEquals('Test Question', $this->question->title);
+        $this->assertNotEquals('This is a new question.', $this->question->body);
     }
 
     /** @test */
@@ -121,5 +157,41 @@ class QuestionTest extends TestCase
 
             $this->assertCount(1, Question::all());
         });
+    }
+
+    /** @test */
+    public function any_user_show_question()
+    {        
+        $response = $this->get('/api/questions/' . $this->question->slug);
+    
+        $response->assertJson([
+            'data' => [
+                'title' => $this->question->title,
+                'body' => $this->question->body,
+                'created_at' => $this->question->created_at->diffForHumans(),
+                'user_name' => $this->question->user->name,
+                'category_name' => $this->question->category->name,
+            ],
+        ]);
+    }
+
+    /** @test */
+    public function auth_user_can_delete_question()
+    {
+        $response = $this->delete('api/questions/' . $this->question->slug, array_merge($this->data(), ['title' => '', 'body' => '', 'category_id' => '']), $this->server);
+
+        $response->assertStatus(204);
+
+        $this->assertCount(0, Question::all());
+    }
+
+    /** @test */
+    public function unauth_user_cannot_delete_question()
+    {
+        $response = $this->delete('/api/questions/' . $this->question->slug, array_merge($this->server, ['HTTP_Authorization' => '']));
+        
+        $response->assertStatus(500);
+        
+        $this->assertCount(1, Question::all());
     }
 }

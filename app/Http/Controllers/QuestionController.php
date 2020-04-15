@@ -23,15 +23,19 @@ class QuestionController extends Controller
 
     public function store(QuestionRequest $request)
     {
-        Question::create([
+        $request['slug'] = Str::slug($request->title);
+
+        $question = auth()->user()->questions()->create($request->all()); 
+
+        /*$question = Question::create([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'body' => $request->body,
             'category_id' => $request->category_id,
             'user_id' => auth()->user()->id
-        ]);
+        ]);*/
 
-        return response('Created', 201);
+        return (new QuestionResource($question))->response()->setStatusCode(201);
     }
 
     public function show(Question $question)
@@ -41,21 +45,26 @@ class QuestionController extends Controller
 
     public function update(QuestionRequest $request, Question $question)
     {
-        $question->update(
+        $request['slug'] = Str::slug($request->title);
+
+        $question->update($request->all());
+
+        /*$question->update(
             [
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
                 'body' => $request->body,
                 'category_id' => $request->category_id,
             ]
-        );
+        );*/
 
-        return response('Updated', 202);
+        return (new QuestionResource($question))->response()->setStatusCode(202);
     }
 
     public function destroy(Question $question)
     {
         $question->delete();
-		return response('Deleted', 201);
+
+		return response('deleted', 204);
     }
 }

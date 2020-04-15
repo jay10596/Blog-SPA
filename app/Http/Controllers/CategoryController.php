@@ -8,6 +8,9 @@ use Illuminate\Support\Str;
 use App\Http\Resources\CategoryResource;
 use App\Http\Requests\CategoryRequest;
 
+use App\Question;
+use App\Http\Resources\QuestionResource;
+
 
 class CategoryController extends Controller
 {
@@ -23,17 +26,20 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request)
     {
-        Category::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-        ]);
+        $request['slug'] = Str::slug($request->name);
+        
+        $category = Category::create($request->all());
 
-        return response('Created', 201);
+        return (new CategoryResource($category))->response()->setStatusCode(201); /*It will wrap the content in data: {}
+
+        return response(new CategoryResource($category), 201); it will display content directly because of response()*/
     }
 
     public function show(Category $category)
     {
-        return new CategoryResource($category);
+        $questions = Question::where('category_id', $category->id)->get();
+
+        return (QuestionResource::collection($questions))->response()->setStatusCode(200);
     }
 
     public function update(CategoryRequest $request, Category $category)
@@ -43,12 +49,13 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        return response('Updated', 202);
+        return (new CategoryResource($category))->response()->setStatusCode(202);
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
-	    return response('Deleted', 201);
+
+	    return response('Deleted', 204);
     }
 }
