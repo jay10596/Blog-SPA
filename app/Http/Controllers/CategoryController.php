@@ -6,17 +6,22 @@ use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Resources\CategoryResource;
+use App\Http\Requests\CategoryRequest;
 
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('JWT', ['except' => ['index', 'show']]);
+    }
 
     public function index()
     {
         return CategoryResource::collection(Category::latest()->get());
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         Category::create([
             'name' => $request->name,
@@ -31,7 +36,7 @@ class CategoryController extends Controller
         return new CategoryResource($category);
     }
 
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
         $category->update([
             'name' => $request->name,

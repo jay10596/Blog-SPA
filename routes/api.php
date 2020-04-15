@@ -7,6 +7,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::apiResource('/users', 'UserController');
+
 Route::apiResource('/questions', 'QuestionController');
 
 Route::apiResource('/categories', 'CategoryController');
