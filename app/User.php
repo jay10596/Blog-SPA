@@ -50,6 +50,8 @@ class User extends Authenticatable implements JWTSubject
         $this->attributes['birthday'] = Carbon::parse($birthday);
     }
 
+    protected $with = ['questions'];
+
     public function questions()
     {
         return $this->hasMany(Question::class);

@@ -141,7 +141,7 @@ class ReplyTest extends TestCase
     }
 
     /** @test */
-    public function unauth_admin_cannot_delete_category()
+    public function unauth_user_cannot_delete_reply()
     {
         $response = $this->delete('/api/questions/' . $this->question->slug . '/replies/' . $this->reply->id, array_merge($this->server, ['HTTP_Authorization' => '']));
         

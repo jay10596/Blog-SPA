@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
 
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('JWT', ['except' => ['index', 'show']]);
+    }
 
     public function index()
     {
@@ -17,20 +23,20 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return $user;
+        return new UserResource($user);
     }
 
     public function update(UserRequest $request, User $user)
     {
-        auth()->user()->update($request->all());
+        $user->update($request->all());
 
-        return response('Updated', 202);
+        return (new UserResource($user))->response()->setStatusCode(202);
     }
 
     public function destroy(User $user)
     {
         auth()->user()->delete();
 
-        return response('Deleted', 201);
+        return response('Deleted', 204);
     }
 }
