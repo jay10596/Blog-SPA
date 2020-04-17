@@ -9,6 +9,8 @@ class User {
         if(Token.isValid(token))
         {
             Storage.store(token, username)
+
+            window.location = "/" //it refreshes the app without the hard refresh and redirects to '/'
         }
     }
 
@@ -28,6 +30,8 @@ class User {
 
     logout(){
         Storage.clear()
+
+        window.location = "/"
     }
 
     name() {

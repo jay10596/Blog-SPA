@@ -2012,9 +2012,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "SearchBar"
+  name: "SearchBar",
+  created: function created() {
+    EventBus.$on('logout', function () {
+      User.logout();
+    });
+  },
+  data: function data() {
+    return {
+      items: [{
+        title: 'Home',
+        to: '/',
+        show: true
+      }, {
+        title: 'Login',
+        to: '/login',
+        show: !User.loggedIn()
+      }, {
+        title: 'Register',
+        to: '/register',
+        show: !User.loggedIn()
+      }, {
+        title: 'Logout',
+        to: '/logout',
+        show: User.loggedIn()
+      }]
+    };
+  }
 });
 
 /***/ }),
@@ -2028,37 +2053,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2130,9 +2124,31 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/api/auth/login', this.loginForm).then(function (res) {
         return User.responseAfterLogin(res);
       })["catch"](function (error) {
-        return _this.errors = error.response.data;
+        return _this.errors = error.response.data.errors;
       });
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/auth/Logout.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/auth/Logout.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Logout",
+  created: function created() {
+    EventBus.$emit('logout');
   }
 });
 
@@ -2147,38 +2163,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -19997,11 +19981,13 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "flex justify-end" },
-    [
-      _c("router-link", { attrs: { to: "/login" } }, [_vm._v("Login")]),
-      _vm._v(" "),
-      _c("router-link", { attrs: { to: "/register" } }, [_vm._v("Register")])
-    ],
+    _vm._l(_vm.items, function(item) {
+      return item.show
+        ? _c("router-link", { key: item.title, attrs: { to: item.to } }, [
+            _vm._v(_vm._s(item.title))
+          ])
+        : _vm._e()
+    }),
     1
   )
 }
@@ -20030,226 +20016,158 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "mx-auto h-full flex justify-center items-center bg-gray-200"
+      staticClass: "w-full h-full flex justify-center items-center bg-fixed",
+      staticStyle: {
+        "background-image":
+          "url(https://images.wallpapersden.com/image/download/eagle-mountain-sunset-minimalist_63668_2048x1152.jpg)"
+      }
     },
     [
-      _c("div", { staticClass: "bg-blue-900 w-96 rounded-lg shadow-xl p-6" }, [
-        _c(
-          "svg",
-          {
-            staticClass: "fill-current h-16 w-16 text-gray-100",
-            staticStyle: { "enable-background": "new 0 0 465 465" },
-            attrs: {
-              version: "1.1",
-              id: "Capa_1",
-              xmlns: "http://www.w3.org/2000/svg",
-              "xmlns:xlink": "http://www.w3.org/1999/xlink",
-              x: "0px",
-              y: "0px",
-              viewBox: "0 0 465 465",
-              "xml:space": "preserve"
-            }
-          },
-          [
-            _c("path", {
-              attrs: {
-                d:
-                  "M457.5,15H7.5C3.357,15,0,18.358,0,22.5v420c0,4.142,3.357,7.5,7.5,7.5h450c4.143,0,7.5-3.358,7.5-7.5v-420\n                C465,18.358,461.643,15,457.5,15z M450,65h-35V30h35V65z M400,30v35H15V30H400z M15,435V80h435v355H15z"
+      _c(
+        "div",
+        {
+          staticClass:
+            "bg-transparent opacity-100 w-96 rounded-lg shadow-2xl border border-red-900 p-6"
+        },
+        [
+          _c("h1", { staticClass: "text-3xl pt-6 text-gray-100" }, [
+            _vm._v("Welcome Back")
+          ]),
+          _vm._v(" "),
+          _c("h2", { staticClass: "text-base text-gray-200" }, [
+            _vm._v("Enter your details below!")
+          ]),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              staticClass: "mt-8",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.login($event)
+                }
               }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M397.5,220h-330c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h330c4.143,0,7.5-3.358,7.5-7.5S401.643,220,397.5,220z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M212.5,260h-145c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5S216.643,260,212.5,260z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M212.5,300h-145c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5S216.643,300,212.5,300z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M212.5,340h-145c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5S216.643,340,212.5,340z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M397.5,260h-145c-4.143,0-7.5,3.358-7.5,7.5v30c0,4.142,3.357,7.5,7.5,7.5s7.5-3.358,7.5-7.5V275h130v105H260v-52.5\n                c0-4.142-3.357-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v60c0,4.142,3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5v-120\n                C405,263.358,401.643,260,397.5,260z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M212.5,380h-145c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5S216.643,380,212.5,380z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M336.641,160.31c5.052,2.658,11.048,3.639,16.848,4.587c13.05,2.134,14.905,3.538,14.905,7.598\n                c0,5.925-8.605,7.506-13.69,7.506c-6.801,0-12.175-2.222-13.371-5.53c-1.41-3.896-5.715-5.91-9.604-4.5\n                c-3.896,1.409-5.91,5.709-4.501,9.604C330.67,189.089,341.198,195,354.703,195c16.893,0,28.69-9.255,28.69-22.506\n                c0-7.992-3.676-14.151-10.631-17.812c-5.053-2.659-11.052-3.641-16.853-4.589c-13.043-2.133-14.897-3.534-14.897-7.587\n                c0-5.925,8.605-7.506,13.69-7.506c6.8,0,12.173,2.222,13.372,5.528c1.411,3.893,5.709,5.91,9.606,4.495\n                c3.895-1.412,5.907-5.713,4.495-9.607C378.729,125.907,368.202,120,354.703,120c-16.893,0-28.69,9.255-28.69,22.506\n                C326.013,150.495,329.688,156.651,336.641,160.31z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M250.633,189.342c0.769,3.031,3.336,5.268,6.444,5.612c3.097,0.35,6.104-1.274,7.517-4.064l8.513-16.799l8.513,16.799\n                c1.288,2.54,3.887,4.11,6.688,4.11c0.275,0,0.552-0.015,0.829-0.046c3.108-0.344,5.676-2.581,6.444-5.612l15.203-60\n                c1.018-4.015-1.413-8.095-5.429-9.112c-4.014-1.017-8.094,1.412-9.112,5.428l-10.288,40.603l-6.157-12.151\n                c-1.278-2.521-3.864-4.11-6.69-4.11s-5.412,1.589-6.69,4.11l-6.157,12.151l-10.288-40.603c-1.018-4.016-5.099-6.442-9.112-5.428\n                c-4.016,1.017-6.446,5.097-5.429,9.112L250.633,189.342z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M170.319,195H212.7c4.143,0,7.5-3.358,7.5-7.5s-3.357-7.5-7.5-7.5h-34.881v-15h20.754c4.143,0,7.5-3.358,7.5-7.5\n                s-3.357-7.5-7.5-7.5h-20.754v-15H212.7c4.143,0,7.5-3.358,7.5-7.5s-3.357-7.5-7.5-7.5h-42.381c-4.143,0-7.5,3.358-7.5,7.5v60\n                C162.819,191.642,166.177,195,170.319,195z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M89.106,195c4.143,0,7.5-3.358,7.5-7.5v-39.661l38.009,44.53c1.453,1.703,3.553,2.631,5.706,2.631\n                c0.868,0,1.746-0.151,2.593-0.464c2.947-1.086,4.905-3.895,4.905-7.037v-60c0-4.142-3.357-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v39.661\n                l-38.009-44.53c-2.039-2.389-5.353-3.255-8.299-2.167c-2.947,1.086-4.905,3.895-4.905,7.037v60\n                C81.606,191.642,84.964,195,89.106,195z"
-              }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("h1", { staticClass: "text-3xl pt-6 text-gray-100" }, [
-          _vm._v("Welcome Back")
-        ]),
-        _vm._v(" "),
-        _c("h2", { staticClass: "text-base text-blue-200" }, [
-          _vm._v("Enter your details below!")
-        ]),
-        _vm._v(" "),
-        _c(
-          "form",
-          {
-            staticClass: "mt-8",
-            on: {
-              submit: function($event) {
-                $event.preventDefault()
-                return _vm.login($event)
-              }
-            }
-          },
-          [
-            _c("div", { staticClass: "reletive" }, [
-              _c(
-                "label",
-                {
-                  staticClass:
-                    "uppercase text-blue-400 text-xs font-bold absolute p-1",
-                  attrs: { for: "email" }
-                },
-                [_vm._v("E-mail")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.loginForm.email,
-                      expression: "loginForm.email"
-                    }
-                  ],
-                  staticClass:
-                    "pt-8 w-full rounded bg-blue-800 p-1 text-gray-100 outline-none focus:bg-blue-700",
-                  attrs: { type: "text", placeholder: "Enter your Email" },
-                  domProps: { value: _vm.loginForm.email },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.loginForm, "email", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
+            },
+            [
+              _c("div", { staticClass: "reletive" }, [
                 _c(
-                  "span",
+                  "label",
                   {
-                    staticClass: "text-red-700 pt-1 text-sm",
-                    attrs: { role: "alert" }
+                    staticClass:
+                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                    attrs: { for: "email" }
                   },
-                  [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(_vm.errors) +
-                        "\n                    "
-                    )
-                  ]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pt-3" }, [
-              _c(
-                "label",
-                {
-                  staticClass:
-                    "uppercase text-blue-400 text-xs font-bold absolute p-1",
-                  attrs: { for: "password" }
-                },
-                [_vm._v("Password")]
-              ),
-              _vm._v(" "),
-              _c("div", {}, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.loginForm.password,
-                      expression: "loginForm.password"
-                    }
-                  ],
-                  staticClass:
-                    "pt-8 w-full rounded bg-blue-800 p-1 text-gray-100 outline-none focus:bg-blue-700",
-                  attrs: { type: "text", placeholder: "Enter your password" },
-                  domProps: { value: _vm.loginForm.password },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.loginForm, "password", $event.target.value)
-                    }
-                  }
-                }),
+                  [_vm._v("E-mail")]
+                ),
                 _vm._v(" "),
-                _c("span", {
-                  staticClass: "text-red-700 pt-1 text-sm",
-                  attrs: { role: "alert" }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _vm._m(0),
-            _vm._v(" "),
-            _vm._m(1)
-          ]
-        )
-      ])
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.loginForm.email,
+                        expression: "loginForm.email"
+                      }
+                    ],
+                    staticClass:
+                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
+                    attrs: { type: "text", placeholder: "Enter your Email" },
+                    domProps: { value: _vm.loginForm.email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.loginForm, "email", $event.target.value)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.email
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "text-gray-100 pt-1 text-sm",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.errors.email[0]) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "pt-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                    attrs: { for: "password" }
+                  },
+                  [_vm._v("Password")]
+                ),
+                _vm._v(" "),
+                _c("div", {}, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.loginForm.password,
+                        expression: "loginForm.password"
+                      }
+                    ],
+                    staticClass:
+                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
+                    attrs: {
+                      type: "password",
+                      placeholder: "Enter your password"
+                    },
+                    domProps: { value: _vm.loginForm.password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.loginForm, "password", $event.target.value)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.password
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "text-gray-100 pt-1 text-sm",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.errors.password[0]) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(0),
+              _vm._v(" "),
+              _vm._m(1)
+            ]
+          )
+        ]
+      )
     ]
   )
 }
@@ -20263,7 +20181,7 @@ var staticRenderFns = [
         "button",
         {
           staticClass:
-            "mt-8 uppercase rounded-lg bg-gray-100 text-blue-800 font-bold w-full h-8 px-2 text-left",
+            "mt-8 uppercase rounded-lg shadow-2xl border border-red-900 bg-transparent text-gray-100 hover:bg-gray-100 hover:text-red-900 font-semibold w-full h-8 px-2 text-left",
           attrs: { type: "submit" }
         },
         [_vm._v("\n                    Login\n                ")]
@@ -20297,6 +20215,30 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/auth/Logout.vue?vue&type=template&id=4f27ba76&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/auth/Logout.vue?vue&type=template&id=4f27ba76& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/auth/Register.vue?vue&type=template&id=d4f9cbe2&":
 /*!****************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/auth/Register.vue?vue&type=template&id=d4f9cbe2& ***!
@@ -20315,401 +20257,319 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "mx-auto h-full flex justify-center items-center bg-gray-200"
+      staticClass: "w-full h-full flex justify-center items-center bg-fixed",
+      staticStyle: {
+        "background-image":
+          "url(https://images.wallpapersden.com/image/download/eagle-mountain-sunset-minimalist_63668_2048x1152.jpg)"
+      }
     },
     [
-      _c("div", { staticClass: "bg-blue-900 w-96 rounded-lg shadow-xl p-6" }, [
-        _c(
-          "svg",
-          {
-            staticClass: "fill-current h-16 w-16 text-gray-100",
-            staticStyle: { "enable-background": "new 0 0 465 465" },
-            attrs: {
-              version: "1.1",
-              id: "Capa_1",
-              xmlns: "http://www.w3.org/2000/svg",
-              "xmlns:xlink": "http://www.w3.org/1999/xlink",
-              x: "0px",
-              y: "0px",
-              viewBox: "0 0 465 465",
-              "xml:space": "preserve"
-            }
-          },
-          [
-            _c("path", {
-              attrs: {
-                d:
-                  "M457.5,15H7.5C3.357,15,0,18.358,0,22.5v420c0,4.142,3.357,7.5,7.5,7.5h450c4.143,0,7.5-3.358,7.5-7.5v-420\n                C465,18.358,461.643,15,457.5,15z M450,65h-35V30h35V65z M400,30v35H15V30H400z M15,435V80h435v355H15z"
+      _c(
+        "div",
+        {
+          staticClass:
+            "bg-transparent opacity-100 w-96 rounded-lg shadow-2xl border border-red-900 p-6"
+        },
+        [
+          _c("h1", { staticClass: "text-3xl pt-6 text-gray-100" }, [
+            _vm._v("Welcome Back")
+          ]),
+          _vm._v(" "),
+          _c("h2", { staticClass: "text-base text-blue-200" }, [
+            _vm._v("Enter your details below!")
+          ]),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              staticClass: "mt-8",
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.register($event)
+                }
               }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M397.5,220h-330c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h330c4.143,0,7.5-3.358,7.5-7.5S401.643,220,397.5,220z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M212.5,260h-145c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5S216.643,260,212.5,260z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M212.5,300h-145c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5S216.643,300,212.5,300z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M212.5,340h-145c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5S216.643,340,212.5,340z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M397.5,260h-145c-4.143,0-7.5,3.358-7.5,7.5v30c0,4.142,3.357,7.5,7.5,7.5s7.5-3.358,7.5-7.5V275h130v105H260v-52.5\n                c0-4.142-3.357-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v60c0,4.142,3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5v-120\n                C405,263.358,401.643,260,397.5,260z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M212.5,380h-145c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h145c4.143,0,7.5-3.358,7.5-7.5S216.643,380,212.5,380z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M336.641,160.31c5.052,2.658,11.048,3.639,16.848,4.587c13.05,2.134,14.905,3.538,14.905,7.598\n                c0,5.925-8.605,7.506-13.69,7.506c-6.801,0-12.175-2.222-13.371-5.53c-1.41-3.896-5.715-5.91-9.604-4.5\n                c-3.896,1.409-5.91,5.709-4.501,9.604C330.67,189.089,341.198,195,354.703,195c16.893,0,28.69-9.255,28.69-22.506\n                c0-7.992-3.676-14.151-10.631-17.812c-5.053-2.659-11.052-3.641-16.853-4.589c-13.043-2.133-14.897-3.534-14.897-7.587\n                c0-5.925,8.605-7.506,13.69-7.506c6.8,0,12.173,2.222,13.372,5.528c1.411,3.893,5.709,5.91,9.606,4.495\n                c3.895-1.412,5.907-5.713,4.495-9.607C378.729,125.907,368.202,120,354.703,120c-16.893,0-28.69,9.255-28.69,22.506\n                C326.013,150.495,329.688,156.651,336.641,160.31z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M250.633,189.342c0.769,3.031,3.336,5.268,6.444,5.612c3.097,0.35,6.104-1.274,7.517-4.064l8.513-16.799l8.513,16.799\n                c1.288,2.54,3.887,4.11,6.688,4.11c0.275,0,0.552-0.015,0.829-0.046c3.108-0.344,5.676-2.581,6.444-5.612l15.203-60\n                c1.018-4.015-1.413-8.095-5.429-9.112c-4.014-1.017-8.094,1.412-9.112,5.428l-10.288,40.603l-6.157-12.151\n                c-1.278-2.521-3.864-4.11-6.69-4.11s-5.412,1.589-6.69,4.11l-6.157,12.151l-10.288-40.603c-1.018-4.016-5.099-6.442-9.112-5.428\n                c-4.016,1.017-6.446,5.097-5.429,9.112L250.633,189.342z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M170.319,195H212.7c4.143,0,7.5-3.358,7.5-7.5s-3.357-7.5-7.5-7.5h-34.881v-15h20.754c4.143,0,7.5-3.358,7.5-7.5\n                s-3.357-7.5-7.5-7.5h-20.754v-15H212.7c4.143,0,7.5-3.358,7.5-7.5s-3.357-7.5-7.5-7.5h-42.381c-4.143,0-7.5,3.358-7.5,7.5v60\n                C162.819,191.642,166.177,195,170.319,195z"
-              }
-            }),
-            _vm._v(" "),
-            _c("path", {
-              attrs: {
-                d:
-                  "M89.106,195c4.143,0,7.5-3.358,7.5-7.5v-39.661l38.009,44.53c1.453,1.703,3.553,2.631,5.706,2.631\n                c0.868,0,1.746-0.151,2.593-0.464c2.947-1.086,4.905-3.895,4.905-7.037v-60c0-4.142-3.357-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v39.661\n                l-38.009-44.53c-2.039-2.389-5.353-3.255-8.299-2.167c-2.947,1.086-4.905,3.895-4.905,7.037v60\n                C81.606,191.642,84.964,195,89.106,195z"
-              }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("h1", { staticClass: "text-3xl pt-6 text-gray-100" }, [
-          _vm._v("Welcome Back")
-        ]),
-        _vm._v(" "),
-        _c("h2", { staticClass: "text-base text-blue-200" }, [
-          _vm._v("Enter your details below!")
-        ]),
-        _vm._v(" "),
-        _c(
-          "form",
-          {
-            staticClass: "mt-8",
-            on: {
-              submit: function($event) {
-                $event.preventDefault()
-                return _vm.register($event)
-              }
-            }
-          },
-          [
-            _c("div", { staticClass: "reletive" }, [
-              _c(
-                "label",
-                {
-                  staticClass:
-                    "uppercase text-blue-400 text-xs font-bold absolute p-1",
-                  attrs: { for: "name" }
-                },
-                [_vm._v("Name")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.registerForm.name,
-                      expression: "registerForm.name"
-                    }
-                  ],
-                  staticClass:
-                    "pt-8 w-full rounded bg-blue-800 p-1 text-gray-100 outline-none focus:bg-blue-700",
-                  attrs: { type: "text", placeholder: "Register your name" },
-                  domProps: { value: _vm.registerForm.name },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.registerForm, "name", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.name
-                  ? _c(
-                      "span",
-                      {
-                        staticClass: "text-gray-100 pt-1 text-sm",
-                        attrs: { role: "alert" }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm.errors.name[0]) +
-                            "\n                    "
-                        )
-                      ]
-                    )
-                  : _vm._e()
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pt-3" }, [
-              _c(
-                "label",
-                {
-                  staticClass:
-                    "uppercase text-blue-400 text-xs font-bold absolute p-1",
-                  attrs: { for: "birthday" }
-                },
-                [_vm._v("Birthday")]
-              ),
-              _vm._v(" "),
-              _c("div", {}, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.registerForm.birthday,
-                      expression: "registerForm.birthday"
-                    }
-                  ],
-                  staticClass:
-                    "pt-8 w-full rounded bg-blue-800 p-1 text-gray-100 outline-none focus:bg-blue-700",
-                  attrs: { type: "text", placeholder: "mm/dd/yyyy" },
-                  domProps: { value: _vm.registerForm.birthday },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(
-                        _vm.registerForm,
-                        "birthday",
-                        $event.target.value
-                      )
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.birthday
-                  ? _c(
-                      "span",
-                      {
-                        staticClass: "text-gray-100 pt-1 text-sm",
-                        attrs: { role: "alert" }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm.errors.birthday[0]) +
-                            "\n                    "
-                        )
-                      ]
-                    )
-                  : _vm._e()
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pt-3" }, [
-              _c(
-                "label",
-                {
-                  staticClass:
-                    "uppercase text-blue-400 text-xs font-bold absolute p-1",
-                  attrs: { for: "email" }
-                },
-                [_vm._v("E-mail")]
-              ),
-              _vm._v(" "),
-              _c("div", {}, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.registerForm.email,
-                      expression: "registerForm.email"
-                    }
-                  ],
-                  staticClass:
-                    "pt-8 w-full rounded bg-blue-800 p-1 text-gray-100 outline-none focus:bg-blue-700",
-                  attrs: { type: "email", placeholder: "Register your email" },
-                  domProps: { value: _vm.registerForm.email },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.registerForm, "email", $event.target.value)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.email
-                  ? _c(
-                      "span",
-                      {
-                        staticClass: "text-gray-100 pt-1 text-sm",
-                        attrs: { role: "alert" }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm.errors.email[0]) +
-                            "\n                    "
-                        )
-                      ]
-                    )
-                  : _vm._e()
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pt-3" }, [
-              _c(
-                "label",
-                {
-                  staticClass:
-                    "uppercase text-blue-400 text-xs font-bold absolute p-1",
-                  attrs: { for: "password" }
-                },
-                [_vm._v("Password")]
-              ),
-              _vm._v(" "),
-              _c("div", {}, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.registerForm.password,
-                      expression: "registerForm.password"
-                    }
-                  ],
-                  staticClass:
-                    "pt-8 w-full rounded bg-blue-800 p-1 text-gray-100 outline-none focus:bg-blue-700",
-                  attrs: {
-                    type: "password",
-                    placeholder: "Enter your password"
+            },
+            [
+              _c("div", { staticClass: "reletive" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                    attrs: { for: "name" }
                   },
-                  domProps: { value: _vm.registerForm.password },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(
-                        _vm.registerForm,
-                        "password",
-                        $event.target.value
-                      )
-                    }
-                  }
-                }),
+                  [_vm._v("Name")]
+                ),
                 _vm._v(" "),
-                _vm.errors.password
-                  ? _c(
-                      "span",
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
                       {
-                        staticClass: "text-gray-100 pt-1 text-sm",
-                        attrs: { role: "alert" }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm.errors.password[0]) +
-                            "\n                    "
-                        )
-                      ]
-                    )
-                  : _vm._e()
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "pt-3" }, [
-              _c(
-                "label",
-                {
-                  staticClass:
-                    "uppercase text-blue-400 text-xs font-bold absolute p-1",
-                  attrs: { for: "password_confirmation" }
-                },
-                [_vm._v("Password")]
-              ),
-              _vm._v(" "),
-              _c("div", {}, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.registerForm.password_confirmation,
-                      expression: "registerForm.password_confirmation"
-                    }
-                  ],
-                  staticClass:
-                    "pt-8 w-full rounded bg-blue-800 p-1 text-gray-100 outline-none focus:bg-blue-700",
-                  attrs: {
-                    type: "password",
-                    placeholder: "Confirm your password"
-                  },
-                  domProps: { value: _vm.registerForm.password_confirmation },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.registerForm.name,
+                        expression: "registerForm.name"
                       }
-                      _vm.$set(
-                        _vm.registerForm,
-                        "password_confirmation",
-                        $event.target.value
-                      )
+                    ],
+                    staticClass:
+                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
+                    attrs: { type: "text", placeholder: "Register your name" },
+                    domProps: { value: _vm.registerForm.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.registerForm, "name", $event.target.value)
+                      }
                     }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _vm._m(0)
-          ]
-        )
-      ])
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.name
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "text-gray-100 pt-1 text-sm",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.errors.name[0]) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "pt-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                    attrs: { for: "birthday" }
+                  },
+                  [_vm._v("Birthday")]
+                ),
+                _vm._v(" "),
+                _c("div", {}, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.registerForm.birthday,
+                        expression: "registerForm.birthday"
+                      }
+                    ],
+                    staticClass:
+                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
+                    attrs: { type: "text", placeholder: "mm/dd/yyyy" },
+                    domProps: { value: _vm.registerForm.birthday },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.registerForm,
+                          "birthday",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.birthday
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "text-gray-100 pt-1 text-sm",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.errors.birthday[0]) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "pt-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                    attrs: { for: "email" }
+                  },
+                  [_vm._v("E-mail")]
+                ),
+                _vm._v(" "),
+                _c("div", {}, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.registerForm.email,
+                        expression: "registerForm.email"
+                      }
+                    ],
+                    staticClass:
+                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
+                    attrs: {
+                      type: "email",
+                      placeholder: "Register your email"
+                    },
+                    domProps: { value: _vm.registerForm.email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.registerForm, "email", $event.target.value)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.email
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "text-gray-100 pt-1 text-sm",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.errors.email[0]) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "pt-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                    attrs: { for: "password" }
+                  },
+                  [_vm._v("Password")]
+                ),
+                _vm._v(" "),
+                _c("div", {}, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.registerForm.password,
+                        expression: "registerForm.password"
+                      }
+                    ],
+                    staticClass:
+                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
+                    attrs: {
+                      type: "password",
+                      placeholder: "Enter your password"
+                    },
+                    domProps: { value: _vm.registerForm.password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.registerForm,
+                          "password",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.password
+                    ? _c(
+                        "span",
+                        {
+                          staticClass: "text-gray-100 pt-1 text-sm",
+                          attrs: { role: "alert" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(_vm.errors.password[0]) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "pt-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass:
+                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                    attrs: { for: "password_confirmation" }
+                  },
+                  [_vm._v("Password")]
+                ),
+                _vm._v(" "),
+                _c("div", {}, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.registerForm.password_confirmation,
+                        expression: "registerForm.password_confirmation"
+                      }
+                    ],
+                    staticClass:
+                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
+                    attrs: {
+                      type: "password",
+                      placeholder: "Confirm your password"
+                    },
+                    domProps: { value: _vm.registerForm.password_confirmation },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.registerForm,
+                          "password_confirmation",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(0)
+            ]
+          )
+        ]
+      )
     ]
   )
 }
@@ -20723,7 +20583,7 @@ var staticRenderFns = [
         "button",
         {
           staticClass:
-            "mt-8 uppercase rounded-lg bg-gray-100 text-blue-800 font-bold w-full h-8 px-2 text-left",
+            "mt-8 uppercase rounded-lg shadow-2xl border border-red-900 bg-transparent text-gray-100 hover:bg-gray-100 hover:text-red-900 font-semibold w-full h-8 px-2 text-left",
           attrs: { type: "submit" }
         },
         [_vm._v("\n                    Register\n                ")]
@@ -35855,6 +35715,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 window.User = _helpers_user_js__WEBPACK_IMPORTED_MODULE_3__["default"];
+console.log(_helpers_user_js__WEBPACK_IMPORTED_MODULE_3__["default"].loggedIn());
+window.EventBus = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
@@ -36257,6 +36119,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/auth/Logout.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/auth/Logout.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Logout_vue_vue_type_template_id_4f27ba76___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Logout.vue?vue&type=template&id=4f27ba76& */ "./resources/js/components/auth/Logout.vue?vue&type=template&id=4f27ba76&");
+/* harmony import */ var _Logout_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Logout.vue?vue&type=script&lang=js& */ "./resources/js/components/auth/Logout.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Logout_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Logout_vue_vue_type_template_id_4f27ba76___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Logout_vue_vue_type_template_id_4f27ba76___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/auth/Logout.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/auth/Logout.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/auth/Logout.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Logout_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Logout.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/auth/Logout.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Logout_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/auth/Logout.vue?vue&type=template&id=4f27ba76&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/auth/Logout.vue?vue&type=template&id=4f27ba76& ***!
+  \********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Logout_vue_vue_type_template_id_4f27ba76___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Logout.vue?vue&type=template&id=4f27ba76& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/auth/Logout.vue?vue&type=template&id=4f27ba76&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Logout_vue_vue_type_template_id_4f27ba76___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Logout_vue_vue_type_template_id_4f27ba76___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/auth/Register.vue":
 /*!***************************************************!*\
   !*** ./resources/js/components/auth/Register.vue ***!
@@ -36466,6 +36397,7 @@ var User = /*#__PURE__*/function () {
 
       if (_token__WEBPACK_IMPORTED_MODULE_0__["default"].isValid(token)) {
         _storage__WEBPACK_IMPORTED_MODULE_1__["default"].store(token, username);
+        window.location = "/"; //it refreshes the app without the hard refresh and redirects to '/'
       }
     }
   }, {
@@ -36488,6 +36420,7 @@ var User = /*#__PURE__*/function () {
     key: "logout",
     value: function logout() {
       _storage__WEBPACK_IMPORTED_MODULE_1__["default"].clear();
+      window.location = "/";
     }
   }, {
     key: "name",
@@ -36533,7 +36466,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _components_ExampleComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/ExampleComponent */ "./resources/js/components/ExampleComponent.vue");
 /* harmony import */ var _components_auth_Login__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/auth/Login */ "./resources/js/components/auth/Login.vue");
-/* harmony import */ var _components_auth_Register__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/auth/Register */ "./resources/js/components/auth/Register.vue");
+/* harmony import */ var _components_auth_Register__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/auth/Register */ "./resources/js/components/auth/Register.vue");
+/* harmony import */ var _components_auth_Logout__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/auth/Logout */ "./resources/js/components/auth/Logout.vue");
+
 
 
 
@@ -36549,7 +36484,10 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
     component: _components_auth_Login__WEBPACK_IMPORTED_MODULE_3__["default"]
   }, {
     path: '/register',
-    component: _components_auth_Register__WEBPACK_IMPORTED_MODULE_5__["default"]
+    component: _components_auth_Register__WEBPACK_IMPORTED_MODULE_4__["default"]
+  }, {
+    path: '/logout',
+    component: _components_auth_Logout__WEBPACK_IMPORTED_MODULE_5__["default"]
   }],
   mode: 'history',
   hash: false

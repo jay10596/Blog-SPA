@@ -5,6 +5,9 @@ import App from './components/App';
 import User from './helpers/user.js';
 window.User = User
 
+console.log(User.loggedIn());
+
+window.EventBus = new Vue();
 
 require('./bootstrap');
 

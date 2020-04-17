@@ -16,9 +16,9 @@ class AuthController extends Controller
         $this->middleware('JWT', ['except' => ['login', 'signup']]);
     }
 
-    public function login()
+    public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
+        $credentials = request()->validate(['email' => 'required', 'password' => 'required']);
 
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
