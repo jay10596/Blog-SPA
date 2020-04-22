@@ -107,7 +107,7 @@ class CategoryTest extends TestCase
     {
         $response = $this->put('/api/categories' . $this->category->slug, $this->data(), array_merge($this->server, ['HTTP_Authorization' => '']));
         
-        $response->assertStatus(404);
+        $response->assertStatus(405);
         
         $this->assertCount(1, Category::all());
 
@@ -148,7 +148,6 @@ class CategoryTest extends TestCase
                     'body' => $question->body,
                     'created_at' => $question->created_at->diffForHumans(),
                     'user_name' => $question->user->name,
-                    'category_name' => $question->category->name,
                 ]
             ]
         ]);

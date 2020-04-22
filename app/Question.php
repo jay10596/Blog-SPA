@@ -11,7 +11,9 @@ use App\Category;
 
 class Question extends Model
 {
-    protected $guarded = [];
+    //protected $guarded = []; //$Not suitable for $request->all()
+
+    protected $fillable = ['title', 'slug', 'body', 'category_id', 'user_id'];
 
     public function getRouteKeyName()
     {
@@ -20,10 +22,10 @@ class Question extends Model
 
     public function getPathAttribute()
     {
-        return "questions/$this->slug";
+        return "/questions/$this->slug";
     }
     
-    protected $with = ['replies'];
+    protected $with = ['replies', 'category'];
 
     public function user()
     {

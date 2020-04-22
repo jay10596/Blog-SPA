@@ -47,7 +47,7 @@ class QuestionController extends Controller
     {
         $request['slug'] = Str::slug($request->title);
 
-        $question->update($request->all());
+        $question->update($request->all()); //To use request->all(), in the model, add proteced protected $fillable =[title,body...].
 
         /*$question->update(
             [
@@ -56,7 +56,7 @@ class QuestionController extends Controller
                 'body' => $request->body,
                 'category_id' => $request->category_id,
             ]
-        );*/
+        );*/ //For this method, in model, only protected $guarded=[] is fine.
 
         return (new QuestionResource($question))->response()->setStatusCode(202);
     }

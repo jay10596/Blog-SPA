@@ -14,7 +14,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'birthday' => $this->birthday->format('m/d/Y'),
             'email' => $this->email,
-            'questions' => $this->questions
+            'questions' => QuestionResource::collection($this->questions)
         ];
     }
 }

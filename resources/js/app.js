@@ -5,7 +5,7 @@ import App from './components/App';
 import User from './helpers/user.js';
 window.User = User
 
-console.log(User.loggedIn());
+console.log(User.id());
 
 window.EventBus = new Vue();
 

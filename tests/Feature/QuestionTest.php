@@ -78,7 +78,6 @@ class QuestionTest extends TestCase
                 'body' => $question->body,
                 'created_at' => $question->created_at->diffForHumans(),
                 'user_name' => $question->user->name,
-                'category_name' => $question->category->name,
             ],
         ]);
     }
@@ -117,7 +116,6 @@ class QuestionTest extends TestCase
                 'body' => $this->question->body,
                 'created_at' => $this->question->created_at->diffForHumans(),
                 'user_name' => $this->question->user->name,
-                'category_name' => $this->question->category->name,
             ],
         ]);
     }
@@ -127,7 +125,7 @@ class QuestionTest extends TestCase
     {
         $response = $this->put('/api/questions' . $this->question->slug, $this->data(), array_merge($this->server, ['HTTP_Authorization' => '']));
         
-        $response->assertStatus(404);
+        $response->assertStatus(405);
         
         $this->assertCount(1, Question::all());
 
@@ -170,7 +168,6 @@ class QuestionTest extends TestCase
                 'body' => $this->question->body,
                 'created_at' => $this->question->created_at->diffForHumans(),
                 'user_name' => $this->question->user->name,
-                'category_name' => $this->question->category->name,
             ],
         ]);
     }

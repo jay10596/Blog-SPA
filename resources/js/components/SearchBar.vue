@@ -1,27 +1,26 @@
 <template>
     <div class="flex justify-end">
-        <router-link v-for="item in items" :key="item.title" v-if="item.show" :to="item.to">{{item.title}}</router-link>
+        <input type="text" placeholder="Search the contacts" class="rounded-full w-64 border border-gray-400 pl-10 p-2 mr-3 focus:outline-none text-sm text-black focus:shadow focus:bg-gray-100 focus:border-blue-600">
+
+        <ImageCircle :name="userName"/>
     </div>
 </template>
 
 <script>
+    import ImageCircle from './extras/ImageCircle'
+
     export default {
         name: "SearchBar",
 
-        created() {
-            EventBus.$on('logout', () => {
-                User.logout()
-            })
-        },
+        components: {ImageCircle},
 
-        data(){
-            return {
-                items: [
-                    {title: 'Home', to: '/', show: true},
-                    {title: 'Login', to: '/login', show: !User.loggedIn()},
-                    {title: 'Register', to: '/register', show: !User.loggedIn()},
-                    {title: 'Logout', to: '/logout', show: User.loggedIn()},             
-                ]
+        computed: {
+            userName() {
+                if(User.loggedIn()) {
+                    return User.name()
+                }
+
+                return '?'
             }
         }
     }

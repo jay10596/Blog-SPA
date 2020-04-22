@@ -1,19 +1,16 @@
 <template>
-    <div class="flex">
-        <div class="bg-blue-800 w-56">
+    <div class="flex bg-gray-100" >
+        <div class="w-56 border-r-2 border-blue-900">
             <NavBar/>
         </div>
 
         <div class="w-full">
-            <div class="bg-gray-400">
+            <div class="p-3 border-b-2 border-blue-900">
                 <SearchBar/>
             </div>
 
-            <div class="flex flex-col bg-gray-200 h-screen">
+            <div class="flex flex-col">
                 <router-view></router-view>
-                
-                <div class="bg-green-300">Hey</div>
-               
             </div>
         </div>
     </div>

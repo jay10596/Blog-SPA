@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-full flex justify-center items-center bg-fixed" style="background-image: url(https://images.wallpapersden.com/image/download/eagle-mountain-sunset-minimalist_63668_2048x1152.jpg)">
+    <div class="w-full h-full flex justify-center items-center bg-fixed">
         <div class="bg-transparent opacity-100 w-96 rounded-lg shadow-2xl border border-red-900 p-6">
 
             <h1 class="text-3xl pt-6 text-gray-100">Welcome Back</h1>

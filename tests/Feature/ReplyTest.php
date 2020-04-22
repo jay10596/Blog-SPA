@@ -71,7 +71,6 @@ class ReplyTest extends TestCase
             'data' => [
                 'id' => $reply->id,
                 'body' => $reply->body,
-                'question_name' => $reply->question->name,
                 'question_id' => $reply->question->id,
                 'user_name' => $reply->user->name,
                 'user_id' => $reply->user_id,
@@ -109,7 +108,6 @@ class ReplyTest extends TestCase
             'data' => [
                 'id' => $this->reply->id,
                 'body' => $this->reply->body,
-                'question_name' => $this->reply->question->name,
                 'question_id' => $this->reply->question->id,
                 'user_name' => $this->reply->user->name,
                 'user_id' => $this->reply->user_id,
