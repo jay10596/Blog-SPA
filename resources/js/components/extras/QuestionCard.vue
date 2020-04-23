@@ -36,11 +36,11 @@
     import ImageCircle from './ImageCircle'
 
     export default {
-        name: 'Card',
+        name: 'QuestionCard',
 
         components: {ImageCircle},
 
-        props: ['question']
+        props: ['question'],
     }
 </script>
 

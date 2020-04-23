@@ -1,23 +1,24 @@
 <template>
     <div>
         <div v-if="categoryQuestions[0]">
-            {{categoryQuestions[0].category.name}}
+            <CategoryBox :category="categoryQuestions[0].category"/>
         </div>
         
         <div v-for="question in categoryQuestions" :key="question.id">
-            <Card :question="question"/>
+            <QuestionCard :question="question"/>
         </div>
     </div>
 
 </template>
 
 <script>
-    import Card from '../extras/Card'
+    import QuestionCard from '../extras/QuestionCard'
+    import CategoryBox from '../extras/CategoryBox'
 
     export default {
         name: 'CategoryQuestions',
 
-        components: {Card},
+        components: {QuestionCard, CategoryBox},
 
         data() {
             return {

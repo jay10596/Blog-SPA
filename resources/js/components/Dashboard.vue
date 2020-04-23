@@ -2,27 +2,28 @@
     <div class="flex justify-center">
         <div class="w-4/6">
             <div v-for="question in questions" :key="question.id">
-                <Card :question="question"/>
+                <QuestionCard :question="question"/>
             </div>
         </div>
-        
-        <div class="mx-auto">
-            <div class="flex flex-col">
-                <router-link :to="'/categories/' + category.slug" v-for="category in categories" :key="category.id">
-                    {{category.name}}
-                </router-link>
-            </div> 
+
+        <div class="w-2/6">
+            <div class="flex flex-wrap justify-center">
+                <div v-for="category in categories" :key="category.id">
+                    <CategoryBox :category="category"/>
+                </div>
+            </div>
         </div>  
     </div>
 </template>
 
 <script>
-    import Card from './extras/Card'
+    import QuestionCard from './extras/QuestionCard'
+    import CategoryBox from './extras/CategoryBox'
 
     export default {
         name: 'Dashboard',
 
-        components: {Card},
+        components: {QuestionCard, CategoryBox},
 
         data() {
             return {

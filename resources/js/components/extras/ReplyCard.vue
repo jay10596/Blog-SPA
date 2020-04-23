@@ -1,5 +1,5 @@
 <template>
-    <div class="w-3/6 m-3 bg-transparent rounded overflow-hidden shadow-xl">
+    <div class="w-3/6 m-3 bg-transparent rounded shadow-xl">
         <div class="px-4 py-4">
             <div class="flex items-center">
                 <ImageCircle :name="reply.user_name"/>
@@ -27,10 +27,21 @@
             </p>
         </div>
 
-        <div v-if="own" class="px-6 mb-4">            
-            <button @click="changeEditMode">edit</button>
-            <button @click="deleteReply">delete</button>
+        <div v-if="own" class="relative flex px-6 mb-4">            
+            <button @click="changeEditMode">Edit</button>
+            <button @click="deleteMode = true">Delete</button>
+
+            <div v-if="deleteMode" class="absolute bg-blue-900 rounded-lg ml-20 text-white w-3/6 z-10 mt-2 p-3">
+                <p>Are you sure you want to delete this contact?</p>
+
+                <div class="flex items-center justify-end mt-3">
+                    <button @click="deleteReply" class="px-4 py-2 bg-red-500 rounded text-sm">Delete</button>
+                    <button @click="deleteMode = false" class="text-sm">Cancel</button>
+                </div>
+            </div>
         </div>
+
+        <div v-if="deleteMode" class="bg-black opacity-25 absolute z-0 left-0 top-0 right-0 bottom-0" @click="deleteMode = false"></div>
     </div>
 </template>
 
@@ -55,6 +66,7 @@
                 replyForm: {
                     body: ''
                 },
+                deleteMode: false,
 				editMode: false
             }
         },

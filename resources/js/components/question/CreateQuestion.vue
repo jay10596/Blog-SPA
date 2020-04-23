@@ -41,8 +41,6 @@
                             {{errors.category_id[0]}}
                         </span>
                     </div>
-
-                    
                 </div>
 
                 <div class="">
@@ -59,8 +57,6 @@
     export default {
         name: 'CreateQuestion',
 
-        props: ['question'],
-
         data() {
             return {
                 questionForm: {
@@ -71,10 +67,6 @@
                 categories: {},
                 errors: {}
             }
-        },
-
-        mounted() {
-            this.questionForm = this.question
         },
 
         created() {

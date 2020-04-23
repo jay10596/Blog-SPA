@@ -3,19 +3,19 @@
         {{user.name}}
 
         <div v-for="question in questions" :key="question.id">
-            <Card :question="question"/>
+            <QuestionCard :question="question"/>
         </div>
     </div>
 
 </template>
 
 <script>
-    import Card from '../extras/Card'
+    import QuestionCard from '../extras/QuestionCard'
 
     export default {
         name: 'UserQuestions',
 
-        components: {Card},
+        components: {QuestionCard},
 
         data() {
             return {

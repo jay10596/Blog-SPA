@@ -16,22 +16,19 @@
             </div>
         </form>
 
-        <div v-for="(category, index) in categories" :key="category.id" class="flex my-3 mx-10">
-            <div class="w-4/6">{{category.name}}</div>    
-
-            <div class="flex w-2/6 justify-end">
-                <button @click="changeEditMode(index)" class="mx-3">edit</button>
-
-                <button @click="deleteCategory(index)" class="">delete</button>
-            </div>
-
+        <div v-for="(category, index) in categories" :key="category.id">
+            <CategoryCard :category="category" :index="index"/>
         </div>
     </div>
 </template>
 
 <script>
+    import CategoryCard from '../extras/CategoryCard'
+
     export default {
         name: 'CategoryCRUD',
+
+        components: {CategoryCard},
 
         data() {
             return {
@@ -46,6 +43,8 @@
         },
 
         created() {
+            this.listen()
+
             axios.get('/api/categories')
                 .then(res => this.categories = res.data.data)
                 .catch(errors =>errors.response.data)
@@ -54,16 +53,6 @@
         methods: {
             submitCategory() {
                 this.editMode == true ? this.updateCategory() : this.createCategory()
-            },
-
-            changeEditMode(index) {
-                this.categoryForm.name = this.categories[index].name
-                
-                this.category = this.categories[index]
-
-                this.categories.splice(index,1)
-
-                this.editMode = true
             },
 
             createCategory() {
@@ -85,16 +74,25 @@
 				    .catch(error => console.log(error))
             },
 
-            deleteCategory(index) {
-                axios.delete(`/api/categories/${this.categories[index].slug}`)
-                    .then(res => this.categories.splice(index, 1))
-				    .catch(error => console.log(error))
-            },
-
             cancelEdit() {
                 this.editMode = false
                 this.categories.unshift(this.category)
                 this.categoryForm.name = null
+            },
+
+            listen() {
+                EventBus.$on('changingEditMode', (index) => {
+                    this.categoryForm.name = this.categories[index].name
+                    this.category = this.categories[index]
+                    this.categories.splice(index,1)
+                    this.editMode = true
+                })
+
+                EventBus.$on('deletingCategory', (index) => {
+                    axios.delete(`/api/categories/${this.categories[index].slug}`)
+                        .then(res => this.categories.splice(index, 1))
+                        .catch(error => console.log(error))
+                })
             }
         }
     }
