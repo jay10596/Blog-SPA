@@ -1,11 +1,11 @@
 <template>
     <div class="flex h-screen bg-gray-100">
-        <div class="w-56 border-r-2 border-blue-900">
+        <div class="w-56 bg-white border-r-2 border-gray-300">
             <NavBar/>
         </div>
 
         <div class="flex flex-col w-full h-screen">
-            <div class="p-2 border-b-2 border-blue-900">
+            <div class="bg-white p-2 border-b-2 border-gray-300">
                 <SearchBar/>
             </div>
 

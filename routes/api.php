@@ -7,17 +7,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('/users', 'UserController');
-
-Route::apiResource('/questions', 'QuestionController');
-
-Route::apiResource('/categories', 'CategoryController');
-
-Route::apiResource('/questions/{question}/replies', 'ReplyController');
-
-Route::post('/{reply}/like', 'LikeController@likeIt');
-Route::delete('/{reply}/like', 'LikeController@unlikeIt');
-
 Route::group([
 
     'middleware' => 'api',
@@ -32,3 +21,19 @@ Route::group([
     Route::post('me', 'AuthController@me');
 
 });
+
+
+Route::apiResource('/users', 'UserController');
+
+Route::apiResource('/questions', 'QuestionController');
+
+Route::apiResource('/categories', 'CategoryController');
+
+Route::apiResource('/questions/{question}/replies', 'ReplyController');
+
+Route::post('/{reply}/like', 'LikeController@likeIt');
+Route::delete('/{reply}/like', 'LikeController@unlikeIt');
+
+Route::post('/image', 'ImageController@upload');
+Route::delete('/image', 'ImageController@remove');
+
