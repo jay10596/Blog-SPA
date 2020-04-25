@@ -1,53 +1,42 @@
 <template>
-    <div class="w-full h-full flex justify-center items-center bg-fixed">
-        <div class="bg-transparent opacity-100 w-96 rounded-lg shadow-2xl border border-red-900 p-6">
+    <div class="w-full my-32 flex justify-center">
+        <form @submit.prevent="login" class="px-8 pt-6 pb-8 mb-4 w-2/6 bg-white shadow-2xl rounded justify-center absolute">
+            
+            <h1 class="text-3xl pt-6 text-blue-700">Welcome Back</h1>
+            <h2 class="text-base text-gray-700">Enter your details below!</h2>
 
-            <h1 class="text-3xl pt-6 text-gray-100">Welcome Back</h1>
-            <h2 class="text-base text-gray-200">Enter your details below!</h2>
+            <div class="my-8">
+                <label for="email" class="uppercase text-blue-700 text-xs font-bold absolute p-2">E-mail</label>
 
-            <form class="mt-8" @submit.prevent="login">
+                <input v-model="loginForm.email" class="pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline" type="text" placeholder="Enter your Email">
 
-                <div class="reletive">
-                    <label for="email" class="uppercase text-red-500 text-xs font-bold absolute p-1">E-mail</label>
+                <span v-if="errors.email" class="text-red-700 pt-1 text-sm" role="alert">
+                    {{errors.email[0]}}
+                </span>
+            </div>
 
-                    <div class="col-md-6">
-                        <input v-model="loginForm.email" class="pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100" type="text" placeholder="Enter your Email">
+            <div class="mb-4">
+                <label for="password" class="uppercase text-blue-700 text-xs font-bold absolute p-2">Password</label>
 
-                        <span v-if="errors.email" class="text-gray-100 pt-1 text-sm" role="alert">
-                            {{errors.email[0]}}
-                        </span>
-                    </div>
-                </div>
+                <input v-model="loginForm.password" class="pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline" type="password" placeholder="Enter your password">
 
-                <div class="pt-3">
-                    <label for="password" class="uppercase text-red-500 text-xs font-bold absolute p-1">Password</label>
+                <span v-if="errors.password" class="text-red-700 pt-1 text-sm" role="alert">
+                    {{errors.password[0]}}
+                </span>
+            </div>
 
-                    <div class="">
-                        <input v-model="loginForm.password" class="pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100" type="password" placeholder="Enter your password">
+            <div class="mb-4">
+                <button type="submit" class="mt-8 uppercase rounded-lg shadow-2xl border border-blue-700 bg-transparent text-blue-700 hover:bg-gray-100 hover:text-gray-100 hover:bg-blue-700 font-semibold py-2 px-4">
+                    Login
+                </button>
+            </div>
 
-                        <span v-if="errors.password" class="text-gray-100 pt-1 text-sm" role="alert">
-                            {{errors.password[0]}}
-                        </span>
-                    </div>
-                </div>
-
-                <div class="">
-                    <button type="submit" class="mt-8 uppercase rounded-lg shadow-2xl border border-red-900 bg-transparent text-gray-100 hover:bg-gray-100 hover:text-red-900 font-semibold w-full h-8 px-2 text-left">
-                        Login
-                    </button>
-                </div>
-
-                <div class="flex justify-between mt-8 text-gray-100">
-                    <a class="btn btn-link" href="">
-                        Forget Your Password?
-                    </a>
-
-                    <a class="btn btn-link" href="">
-                        Register
-                    </a>
-                </div>
-            </form>
-        </div>
+            <div class="flex justify-between text-gray-800">
+                <a class="btn btn-link" href="">
+                    Forget Your Password?
+                </a>
+            </div>
+        </form>
     </div>
 </template>
 
@@ -69,7 +58,7 @@
             login() {
                  axios.post('/api/auth/login', this.loginForm)
                     .then(res => User.responseAfterLogin(res))
-                    .catch(error => this.errors = error.response.data.errors)
+                    .catch(errors => this.errors = errors.response.data.errors)
             }
 
         }

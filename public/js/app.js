@@ -6747,6 +6747,11 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     ImageCircle: _extras_ImageCircle__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  data: function data() {
+    return {
+      userImage: null
+    };
+  },
   computed: {
     userName: function userName() {
       if (User.loggedIn()) {
@@ -6754,6 +6759,15 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return '?';
+    }
+  },
+  created: function created() {
+    var _this = this;
+
+    if (User.loggedIn()) {
+      axios.post('/api/auth/me').then(function (res) {
+        return _this.userImage = res.data.avatar;
+      });
     }
   }
 });
@@ -6769,17 +6783,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -6839,8 +6842,8 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post('/api/auth/login', this.loginForm).then(function (res) {
         return User.responseAfterLogin(res);
-      })["catch"](function (error) {
-        return _this.errors = error.response.data.errors;
+      })["catch"](function (errors) {
+        return _this.errors = errors.response.data.errors;
       });
     }
   }
@@ -6879,6 +6882,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _extras_ImageUpload__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../extras/ImageUpload */ "./resources/js/components/extras/ImageUpload.vue");
 //
 //
 //
@@ -6946,16 +6950,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Register",
+  components: {
+    ImageUpload: _extras_ImageUpload__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
       registerForm: {
@@ -6963,10 +6963,14 @@ __webpack_require__.r(__webpack_exports__);
         birthday: null,
         email: null,
         password: null,
-        password_confirmation: null
+        password_confirmation: null,
+        avatar: null
       },
       errors: {}
     };
+  },
+  created: function created() {
+    this.listen();
   },
   methods: {
     register: function register() {
@@ -6976,6 +6980,13 @@ __webpack_require__.r(__webpack_exports__);
         return User.responseAfterLogin(res);
       })["catch"](function (error) {
         return _this.errors = error.response.data.errors;
+      });
+    },
+    listen: function listen() {
+      var _this2 = this;
+
+      EventBus.$on('uploadingImage', function (uploadedImage) {
+        _this2.registerForm.avatar = uploadedImage;
       });
     }
   }
@@ -7332,26 +7343,13 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     uploadImage: function uploadImage() {
-      var _this3 = this;
-
-      axios.post('/api/image', {
-        'image': this.uploadedImage
-      }).then(function (res) {
-        _this3.uploadedImage = res.data.avatar;
-        _this3.message = 'Profile picture is uploaded successfully!';
-      })["catch"](function (errors) {
-        return console.log(errors);
-      });
+      this.message = 'Profile picture is uploaded successfully!';
+      EventBus.$emit('uploadingImage', this.uploadedImage);
     },
     removeImage: function removeImage() {
-      var _this4 = this;
-
-      axios["delete"]('/api/image').then(function (res) {
-        _this4.uploadedImage = res.data.avatar;
-        _this4.message = 'Profile picture is deleted successfully!';
-      })["catch"](function (errors) {
-        return console.log(errors);
-      });
+      this.uploadedImage = null;
+      this.message = 'Profile picture is deleted successfully!';
+      EventBus.$emit('uploadingImage', this.uploadedImage);
     }
   }
 });
@@ -8010,6 +8008,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'EditUser',
@@ -8019,7 +8033,8 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         birthday: '',
         email: '',
-        password: ''
+        password: '',
+        avatar: null
       },
       user: '',
       errors: {}
@@ -8029,21 +8044,35 @@ __webpack_require__.r(__webpack_exports__);
     ImageUpload: _extras_ImageUpload__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   created: function created() {
-    var _this = this;
-
-    axios.post('/api/auth/me').then(function (res) {
-      _this.user = res.data;
-      _this.userForm = _this.user;
-    })["catch"](function (errors) {
-      return console.log(errors);
-    });
+    this.listen();
+    this.me();
   },
   methods: {
-    editUser: function editUser() {
+    me: function me() {
+      var _this = this;
+
+      axios.post('/api/auth/me').then(function (res) {
+        _this.user = res.data;
+        _this.userForm = _this.user;
+      })["catch"](function (errors) {
+        return console.log(errors);
+      });
+    },
+    listen: function listen() {
       var _this2 = this;
 
-      axios.put("/api/users/".concat(this.user.id), this.userForm).then(this.$router.push('/'))["catch"](function (errors) {
-        return _this2.errors = errors.response;
+      EventBus.$on('uploadingImage', function (uploadedImage) {
+        _this2.userForm.avatar = uploadedImage;
+      });
+    },
+    editUser: function editUser() {
+      var _this3 = this;
+
+      this.errors = {};
+      axios.put("/api/users/".concat(this.user.id), this.userForm).then(function (res) {
+        return window.location = '/';
+      })["catch"](function (errors) {
+        return _this3.errors = errors.response.data.errors;
       });
     }
   }
@@ -26514,7 +26543,9 @@ var render = function() {
         attrs: { type: "text", placeholder: "Search the contacts" }
       }),
       _vm._v(" "),
-      _c("ImageCircle", { attrs: { name: _vm.userName } })
+      _c("ImageCircle", {
+        attrs: { name: _vm.userName, avatar: _vm.userImage }
+      })
     ],
     1
   )
@@ -26541,172 +26572,153 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "w-full h-full flex justify-center items-center bg-fixed" },
-    [
-      _c(
-        "div",
-        {
-          staticClass:
-            "bg-transparent opacity-100 w-96 rounded-lg shadow-2xl border border-red-900 p-6"
-        },
-        [
-          _c("h1", { staticClass: "text-3xl pt-6 text-gray-100" }, [
-            _vm._v("Welcome Back")
-          ]),
-          _vm._v(" "),
-          _c("h2", { staticClass: "text-base text-gray-200" }, [
-            _vm._v("Enter your details below!")
-          ]),
-          _vm._v(" "),
+  return _c("div", { staticClass: "w-full my-32 flex justify-center" }, [
+    _c(
+      "form",
+      {
+        staticClass:
+          "px-8 pt-6 pb-8 mb-4 w-2/6 bg-white shadow-2xl rounded justify-center absolute",
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.login($event)
+          }
+        }
+      },
+      [
+        _c("h1", { staticClass: "text-3xl pt-6 text-blue-700" }, [
+          _vm._v("Welcome Back")
+        ]),
+        _vm._v(" "),
+        _c("h2", { staticClass: "text-base text-gray-700" }, [
+          _vm._v("Enter your details below!")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "my-8" }, [
           _c(
-            "form",
+            "label",
             {
-              staticClass: "mt-8",
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.login($event)
-                }
-              }
+              staticClass:
+                "uppercase text-blue-700 text-xs font-bold absolute p-2",
+              attrs: { for: "email" }
             },
-            [
-              _c("div", { staticClass: "reletive" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass:
-                      "uppercase text-red-500 text-xs font-bold absolute p-1",
-                    attrs: { for: "email" }
-                  },
-                  [_vm._v("E-mail")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-6" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.loginForm.email,
-                        expression: "loginForm.email"
-                      }
-                    ],
-                    staticClass:
-                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
-                    attrs: { type: "text", placeholder: "Enter your Email" },
-                    domProps: { value: _vm.loginForm.email },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.loginForm, "email", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.email
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "text-gray-100 pt-1 text-sm",
-                          attrs: { role: "alert" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(_vm.errors.email[0]) +
-                              "\n                    "
-                          )
-                        ]
-                      )
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "pt-3" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass:
-                      "uppercase text-red-500 text-xs font-bold absolute p-1",
-                    attrs: { for: "password" }
-                  },
-                  [_vm._v("Password")]
-                ),
-                _vm._v(" "),
-                _c("div", {}, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.loginForm.password,
-                        expression: "loginForm.password"
-                      }
-                    ],
-                    staticClass:
-                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
-                    attrs: {
-                      type: "password",
-                      placeholder: "Enter your password"
-                    },
-                    domProps: { value: _vm.loginForm.password },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.loginForm, "password", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.password
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "text-gray-100 pt-1 text-sm",
-                          attrs: { role: "alert" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(_vm.errors.password[0]) +
-                              "\n                    "
-                          )
-                        ]
-                      )
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _vm._m(0),
-              _vm._v(" "),
-              _vm._m(1)
-            ]
-          )
-        ]
-      )
-    ]
-  )
+            [_vm._v("E-mail")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.loginForm.email,
+                expression: "loginForm.email"
+              }
+            ],
+            staticClass:
+              "pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline",
+            attrs: { type: "text", placeholder: "Enter your Email" },
+            domProps: { value: _vm.loginForm.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.loginForm, "email", $event.target.value)
+              }
+            }
+          }),
+          _vm._v(" "),
+          _vm.errors.email
+            ? _c(
+                "span",
+                {
+                  staticClass: "text-red-700 pt-1 text-sm",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.errors.email[0]) +
+                      "\n            "
+                  )
+                ]
+              )
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-4" }, [
+          _c(
+            "label",
+            {
+              staticClass:
+                "uppercase text-blue-700 text-xs font-bold absolute p-2",
+              attrs: { for: "password" }
+            },
+            [_vm._v("Password")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.loginForm.password,
+                expression: "loginForm.password"
+              }
+            ],
+            staticClass:
+              "pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline",
+            attrs: { type: "password", placeholder: "Enter your password" },
+            domProps: { value: _vm.loginForm.password },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.loginForm, "password", $event.target.value)
+              }
+            }
+          }),
+          _vm._v(" "),
+          _vm.errors.password
+            ? _c(
+                "span",
+                {
+                  staticClass: "text-red-700 pt-1 text-sm",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.errors.password[0]) +
+                      "\n            "
+                  )
+                ]
+              )
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _vm._m(1)
+      ]
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", {}, [
+    return _c("div", { staticClass: "mb-4" }, [
       _c(
         "button",
         {
           staticClass:
-            "mt-8 uppercase rounded-lg shadow-2xl border border-red-900 bg-transparent text-gray-100 hover:bg-gray-100 hover:text-red-900 font-semibold w-full h-8 px-2 text-left",
+            "mt-8 uppercase rounded-lg shadow-2xl border border-blue-700 bg-transparent text-blue-700 hover:bg-gray-100 hover:text-gray-100 hover:bg-blue-700 font-semibold py-2 px-4",
           attrs: { type: "submit" }
         },
-        [_vm._v("\n                    Login\n                ")]
+        [_vm._v("\n                Login\n            ")]
       )
     ])
   },
@@ -26714,21 +26726,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "flex justify-between mt-8 text-gray-100" },
-      [
-        _c("a", { staticClass: "btn btn-link", attrs: { href: "" } }, [
-          _vm._v(
-            "\n                    Forget Your Password?\n                "
-          )
-        ]),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-link", attrs: { href: "" } }, [
-          _vm._v("\n                    Register\n                ")
-        ])
-      ]
-    )
+    return _c("div", { staticClass: "flex justify-between text-gray-800" }, [
+      _c("a", { staticClass: "btn btn-link", attrs: { href: "" } }, [
+        _vm._v("\n                Forget Your Password?\n            ")
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -26778,26 +26780,17 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      staticClass: "w-full h-full flex justify-center items-center bg-fixed",
-      staticStyle: {
-        "background-image":
-          "url(https://images.wallpapersden.com/image/download/eagle-mountain-sunset-minimalist_63668_2048x1152.jpg)"
-      }
-    },
+    { staticClass: "w-full h-full flex justify-center items-center bg-fixed" },
     [
       _c(
         "div",
-        {
-          staticClass:
-            "bg-transparent opacity-100 w-96 rounded-lg shadow-2xl border border-red-900 p-6"
-        },
+        { staticClass: "bg-white w-96 rounded-lg shadow-2xl p-6 mt-4" },
         [
-          _c("h1", { staticClass: "text-3xl pt-6 text-gray-100" }, [
+          _c("h1", { staticClass: "text-3xl pt-6 text-blue-700" }, [
             _vm._v("Welcome Back")
           ]),
           _vm._v(" "),
-          _c("h2", { staticClass: "text-base text-blue-200" }, [
+          _c("h2", { staticClass: "text-base text-gray-700" }, [
             _vm._v("Enter your details below!")
           ]),
           _vm._v(" "),
@@ -26813,282 +26806,272 @@ var render = function() {
               }
             },
             [
-              _c("div", { staticClass: "reletive" }, [
+              _c("div", { staticClass: "relative mb-4" }, [
                 _c(
                   "label",
                   {
                     staticClass:
-                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                      "uppercase text-blue-700 text-xs font-bold absolute p-2",
                     attrs: { for: "name" }
                   },
                   [_vm._v("Name")]
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-md-6" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.registerForm.name,
-                        expression: "registerForm.name"
-                      }
-                    ],
-                    staticClass:
-                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
-                    attrs: { type: "text", placeholder: "Register your name" },
-                    domProps: { value: _vm.registerForm.name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.registerForm, "name", $event.target.value)
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.registerForm.name,
+                      expression: "registerForm.name"
                     }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.name
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "text-gray-100 pt-1 text-sm",
-                          attrs: { role: "alert" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(_vm.errors.name[0]) +
-                              "\n                    "
-                          )
-                        ]
-                      )
-                    : _vm._e()
-                ])
+                  ],
+                  staticClass:
+                    "pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline",
+                  attrs: { type: "text", placeholder: "Register your name" },
+                  domProps: { value: _vm.registerForm.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.registerForm, "name", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.name
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "text-gray-100 pt-1 text-sm",
+                        attrs: { role: "alert" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(_vm.errors.name[0]) +
+                            "\n                "
+                        )
+                      ]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "pt-3" }, [
+              _c("div", { staticClass: "relative mb-4" }, [
                 _c(
                   "label",
                   {
                     staticClass:
-                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                      "uppercase text-blue-700 text-xs font-bold absolute p-2",
                     attrs: { for: "birthday" }
                   },
                   [_vm._v("Birthday")]
                 ),
                 _vm._v(" "),
-                _c("div", {}, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.registerForm.birthday,
-                        expression: "registerForm.birthday"
-                      }
-                    ],
-                    staticClass:
-                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
-                    attrs: { type: "text", placeholder: "mm/dd/yyyy" },
-                    domProps: { value: _vm.registerForm.birthday },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.registerForm,
-                          "birthday",
-                          $event.target.value
-                        )
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.registerForm.birthday,
+                      expression: "registerForm.birthday"
                     }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.birthday
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "text-gray-100 pt-1 text-sm",
-                          attrs: { role: "alert" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(_vm.errors.birthday[0]) +
-                              "\n                    "
-                          )
-                        ]
+                  ],
+                  staticClass:
+                    "pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline",
+                  attrs: { type: "text", placeholder: "mm/dd/yyyy" },
+                  domProps: { value: _vm.registerForm.birthday },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.registerForm,
+                        "birthday",
+                        $event.target.value
                       )
-                    : _vm._e()
-                ])
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.birthday
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "text-gray-100 pt-1 text-sm",
+                        attrs: { role: "alert" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(_vm.errors.birthday[0]) +
+                            "\n                "
+                        )
+                      ]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "pt-3" }, [
+              _c("div", { staticClass: "relative mb-4" }, [
                 _c(
                   "label",
                   {
                     staticClass:
-                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                      "uppercase text-blue-700 text-xs font-bold absolute p-2",
                     attrs: { for: "email" }
                   },
                   [_vm._v("E-mail")]
                 ),
                 _vm._v(" "),
-                _c("div", {}, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.registerForm.email,
-                        expression: "registerForm.email"
-                      }
-                    ],
-                    staticClass:
-                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
-                    attrs: {
-                      type: "email",
-                      placeholder: "Register your email"
-                    },
-                    domProps: { value: _vm.registerForm.email },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.registerForm, "email", $event.target.value)
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.registerForm.email,
+                      expression: "registerForm.email"
                     }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.email
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "text-gray-100 pt-1 text-sm",
-                          attrs: { role: "alert" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(_vm.errors.email[0]) +
-                              "\n                    "
-                          )
-                        ]
-                      )
-                    : _vm._e()
-                ])
+                  ],
+                  staticClass:
+                    "pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline",
+                  attrs: { type: "email", placeholder: "Register your email" },
+                  domProps: { value: _vm.registerForm.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.registerForm, "email", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.email
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "text-gray-100 pt-1 text-sm",
+                        attrs: { role: "alert" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(_vm.errors.email[0]) +
+                            "\n                "
+                        )
+                      ]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "pt-3" }, [
+              _c("div", { staticClass: "relative mb-4" }, [
                 _c(
                   "label",
                   {
                     staticClass:
-                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                      "uppercase text-blue-700 text-xs font-bold absolute p-2",
                     attrs: { for: "password" }
                   },
                   [_vm._v("Password")]
                 ),
                 _vm._v(" "),
-                _c("div", {}, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.registerForm.password,
-                        expression: "registerForm.password"
-                      }
-                    ],
-                    staticClass:
-                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
-                    attrs: {
-                      type: "password",
-                      placeholder: "Enter your password"
-                    },
-                    domProps: { value: _vm.registerForm.password },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.registerForm,
-                          "password",
-                          $event.target.value
-                        )
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.registerForm.password,
+                      expression: "registerForm.password"
                     }
-                  }),
-                  _vm._v(" "),
-                  _vm.errors.password
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "text-gray-100 pt-1 text-sm",
-                          attrs: { role: "alert" }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(_vm.errors.password[0]) +
-                              "\n                    "
-                          )
-                        ]
+                  ],
+                  staticClass:
+                    "pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline",
+                  attrs: {
+                    type: "password",
+                    placeholder: "Enter your password"
+                  },
+                  domProps: { value: _vm.registerForm.password },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.registerForm,
+                        "password",
+                        $event.target.value
                       )
-                    : _vm._e()
-                ])
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.password
+                  ? _c(
+                      "span",
+                      {
+                        staticClass: "text-gray-100 pt-1 text-sm",
+                        attrs: { role: "alert" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(_vm.errors.password[0]) +
+                            "\n                "
+                        )
+                      ]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "pt-3" }, [
+              _c("div", { staticClass: "relative mb-6" }, [
                 _c(
                   "label",
                   {
                     staticClass:
-                      "uppercase text-red-500 text-xs font-bold absolute p-1",
+                      "uppercase text-blue-700 text-xs font-bold absolute p-2",
                     attrs: { for: "password_confirmation" }
                   },
                   [_vm._v("Password")]
                 ),
                 _vm._v(" "),
-                _c("div", {}, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.registerForm.password_confirmation,
-                        expression: "registerForm.password_confirmation"
-                      }
-                    ],
-                    staticClass:
-                      "pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100",
-                    attrs: {
-                      type: "password",
-                      placeholder: "Confirm your password"
-                    },
-                    domProps: { value: _vm.registerForm.password_confirmation },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.registerForm,
-                          "password_confirmation",
-                          $event.target.value
-                        )
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.registerForm.password_confirmation,
+                      expression: "registerForm.password_confirmation"
                     }
-                  })
-                ])
+                  ],
+                  staticClass:
+                    "pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline",
+                  attrs: {
+                    type: "password",
+                    placeholder: "Confirm your password"
+                  },
+                  domProps: { value: _vm.registerForm.password_confirmation },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.registerForm,
+                        "password_confirmation",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
               ]),
               _vm._v(" "),
+              _c("ImageUpload"),
+              _vm._v(" "),
               _vm._m(0)
-            ]
+            ],
+            1
           )
         ]
       )
@@ -27100,12 +27083,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", {}, [
+    return _c("div", { staticClass: "flex justify-center" }, [
       _c(
         "button",
         {
           staticClass:
-            "mt-8 uppercase rounded-lg shadow-2xl border border-red-900 bg-transparent text-gray-100 hover:bg-gray-100 hover:text-red-900 font-semibold w-full h-8 px-2 text-left",
+            "mt-4 uppercase rounded-lg shadow-2xl border border-blue-700 bg-transparent text-blue-700 hover:bg-gray-100 hover:text-gray-100 hover:bg-blue-700 font-semibold py-2 px-4",
           attrs: { type: "submit" }
         },
         [_vm._v("\n                    Register\n                ")]
@@ -28699,7 +28682,24 @@ var render = function() {
                 _vm.$set(_vm.userForm, "name", $event.target.value)
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.errors.name
+            ? _c(
+                "span",
+                {
+                  staticClass: "text-red-700 pt-1 text-sm",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.errors.name[0]) +
+                      "\n            "
+                  )
+                ]
+              )
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "mb-4" }, [
@@ -28733,7 +28733,24 @@ var render = function() {
                 _vm.$set(_vm.userForm, "birthday", $event.target.value)
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.errors.birthday
+            ? _c(
+                "span",
+                {
+                  staticClass: "text-red-700 pt-1 text-sm",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.errors.birthday[0]) +
+                      "\n            "
+                  )
+                ]
+              )
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "mb-4" }, [
@@ -28767,7 +28784,24 @@ var render = function() {
                 _vm.$set(_vm.userForm, "email", $event.target.value)
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.errors.email
+            ? _c(
+                "span",
+                {
+                  staticClass: "text-red-700 pt-1 text-sm",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.errors.email[0]) +
+                      "\n            "
+                  )
+                ]
+              )
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "mb-4" }, [
@@ -28801,7 +28835,24 @@ var render = function() {
                 _vm.$set(_vm.userForm, "password", $event.target.value)
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.errors.password
+            ? _c(
+                "span",
+                {
+                  staticClass: "text-red-700 pt-1 text-sm",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.errors.password[0]) +
+                      "\n            "
+                  )
+                ]
+              )
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("ImageUpload"),

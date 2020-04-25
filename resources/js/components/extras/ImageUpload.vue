@@ -50,21 +50,14 @@
             },
 
             uploadImage() {
-                axios.post('/api/image', {'image': this.uploadedImage})
-                    .then(res => {
-                        this.uploadedImage = res.data.avatar
-                        this.message = 'Profile picture is uploaded successfully!'
-                    })
-                    .catch(errors => console.log(errors))  
+                this.message = 'Profile picture is uploaded successfully!'
+                EventBus.$emit('uploadingImage', this.uploadedImage)
             },
 
             removeImage() {
-                axios.delete('/api/image')
-                    .then(res => {
-                        this.uploadedImage = res.data.avatar
-                        this.message = 'Profile picture is deleted successfully!'
-                    })
-                    .catch(errors => console.log(errors))
+                this.uploadedImage = null
+                this.message = 'Profile picture is deleted successfully!'
+                EventBus.$emit('uploadingImage', this.uploadedImage)
             }
         }
     }
