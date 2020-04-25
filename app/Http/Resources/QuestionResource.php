@@ -18,6 +18,7 @@ class QuestionResource extends JsonResource
 
             'user_id' => $this->user_id,
             'user_name' => $this->user->name,
+            'user_avatar' => $this->user->avatar,
 
             'category' => new CategoryResource($this->category),
             

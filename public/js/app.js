@@ -7253,23 +7253,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ImageCircle',
-  props: ['name'],
-  data: function data() {
-    return {
-      user: null,
-      uploadedImage: null
-    };
-  },
-  created: function created() {
-    var _this = this;
-
-    axios.post('/api/auth/me').then(function (res) {
-      _this.user = res.data;
-      _this.uploadedImage = res.data.avatar;
-    })["catch"](function (errors) {
-      return console.log(errors);
-    });
-  },
+  props: ['name', 'avatar'],
   computed: {
     userName: function userName() {
       if (this.name.length > 1) {
@@ -7279,7 +7263,7 @@ __webpack_require__.r(__webpack_exports__);
       return '?';
     },
     userImage: function userImage() {
-      return this.uploadedImage;
+      return this.avatar;
     }
   }
 });
@@ -7320,7 +7304,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ImageUpload',
-  props: ['user'],
   data: function data() {
     return {
       uploadedImage: null,
@@ -27458,11 +27441,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm.uploadedImage != null && _vm.user.name == _vm.name
+    _vm.userImage != null
       ? _c("div", [
           _c("img", {
             staticClass: "w-10 h-10 mx-auto object-cover rounded-full",
-            attrs: { src: _vm.uploadedImage, alt: "Profile Pic" }
+            attrs: { src: _vm.avatar, alt: "Profile Pic" }
           })
         ])
       : _c(
@@ -27590,7 +27573,12 @@ var render = function() {
           "div",
           { staticClass: "flex items-center" },
           [
-            _c("ImageCircle", { attrs: { name: _vm.question.user_name } }),
+            _c("ImageCircle", {
+              attrs: {
+                name: _vm.question.user_name,
+                avatar: _vm.question.user_avatar
+              }
+            }),
             _vm._v(" "),
             _vm.question
               ? _c(

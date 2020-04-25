@@ -25,8 +25,6 @@
     export default {
         name: 'ImageUpload',
 
-        props: ['user'],
-
         data() {
             return {
                 uploadedImage: null,

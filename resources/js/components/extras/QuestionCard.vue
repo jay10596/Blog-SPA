@@ -2,7 +2,7 @@
     <div class="m-3 bg-white rounded overflow-hidden shadow-lg">
         <div class="px-6 py-4">
             <div class="flex items-center">
-                <ImageCircle :name="question.user_name"/>
+                <ImageCircle :name="question.user_name" :avatar="question.user_avatar"/>
 
                 <router-link v-if="question" :to="'/users/' + question.user_id" class="font-semibold text-md ml-2 text-blue-600">
                     {{question.user_name}}
