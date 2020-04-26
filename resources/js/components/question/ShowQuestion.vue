@@ -1,10 +1,12 @@
 <template>
     <div class="h-screen">
-        <a href="#" class="text-blue-400" @click="$router.back()">Back</a>
-
+        <div class="mx-3 my-6">
+            <a href="#" class="font-semibold text-blue-800 hover:text-blue-500" @click="$router.back()">
+                <i class="fas fa-angle-double-left mr-1"></i> Back
+            </a>
+        </div>
+        
         <QuestionCard :question="question"/>
-
-        <h1>total replies {{this.replies.length}}</h1>
 
         <div v-if="own" class="relative">
             <button @click="editQuestion" class="mx-3 px-4 py-2 border border-blue-400 text-blue-400 text-sm rounded">edit</button>
@@ -62,14 +64,7 @@
             deleteQuestion() {
                 axios.delete(`/api/questions/${this.$route.params.slug}`)
                     .then(this.$router.push('/'))
-                    .catch(errors => {
-                        alert('Inrernal Error! Enable to delete the contact.')
-
-                        if(errors.res.status === 404)
-                        {
-                            this.$router.push('/');
-                        }
-                    });
+                    .catch(errors => console.log(errors));
             },
 
             editQuestion() {

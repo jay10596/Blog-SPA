@@ -25,4 +25,12 @@ class LikeController extends Controller
     {
         $reply->likes()->where('user_id', auth()->id())->first()->delete();
     }
+
+    public function getReplies(Reply $reply)
+    {
+        $likedRepliesID = Like::where('user_id', auth()->id())->pluck('reply_id');
+        $replies = Reply::find($likedRepliesID);
+
+        return $replies;
+    }
 }

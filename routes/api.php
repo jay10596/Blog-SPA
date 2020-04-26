@@ -33,7 +33,4 @@ Route::apiResource('/questions/{question}/replies', 'ReplyController');
 
 Route::post('/{reply}/like', 'LikeController@likeIt');
 Route::delete('/{reply}/like', 'LikeController@unlikeIt');
-
-Route::post('/image', 'ImageController@upload');
-Route::delete('/image', 'ImageController@remove');
-
+Route::get('/replies', 'LikeController@getReplies');

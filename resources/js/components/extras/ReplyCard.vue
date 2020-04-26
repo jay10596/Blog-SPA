@@ -1,5 +1,5 @@
 <template>
-    <div class="w-3/6 m-3 bg-transparent rounded shadow-xl">
+    <div class="w-3/6 m-3 p-3 bg-transparent rounded shadow-xl">
         <div class="px-4 py-4">
             <div class="flex items-center">
                 <ImageCircle :name="reply.user_name"/>
@@ -42,16 +42,20 @@
         </div>
 
         <div v-if="deleteMode" class="bg-black opacity-25 absolute z-0 left-0 top-0 right-0 bottom-0" @click="deleteMode = false"></div>
+            
+        <Like :reply="reply"/>
+
     </div>
 </template>
 
 <script>
     import ImageCircle from './ImageCircle'
+    import Like from './Like'
 
     export default {
         name: 'ReplyCard',
 
-        components: {ImageCircle},
+        components: {ImageCircle, Like},
 
         props: ['reply'],
 

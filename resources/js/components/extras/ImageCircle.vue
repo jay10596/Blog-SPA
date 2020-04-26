@@ -20,11 +20,13 @@
 
         computed: {
             userName() {
-                if(this.name.length > 1) {
-                    return this.name.match(/[A-Z]/g).slice(0, 2).join('')
+                if(this.name) {
+                    if(this.name.length > 1) {
+                        return this.name.match(/[A-Z]/g).slice(0, 2).join('')
+                    }
+
+                    return '?'
                 }
-                
-                return '?'
             },
 
             userImage() {

@@ -4,7 +4,7 @@
             <div class="flex items-center m-5">
                 <i :class="item.icon" class="h-12 w-12 text-blue-800 m-2"></i>
                 
-                <p class="text-gray-700 font-bold text-xs uppercase m-2 hover:text-blue-400">
+                <p class="text-gray-700 font-bold text-xs uppercase m-2 hover:text-blue-500">
                     {{item.title}}
                 </p>
             </div>
