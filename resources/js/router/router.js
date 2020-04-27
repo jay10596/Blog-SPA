@@ -8,6 +8,7 @@ import Logout from '../components/auth/Logout'
 
 import UserQuestions from '../components/user/UserQuestions'
 import EditUser from '../components/user/EditUser'
+import FavouriteQuestions from '../components/user/FavouriteQuestions'
 
 import CreateQuestion from '../components/question/CreateQuestion'
 import QuestionReplies from '../components/question/QuestionReplies'
@@ -27,6 +28,7 @@ export default new VueRouter({
 
         { path: '/users/:id', component: UserQuestions},
         { path: '/edituser', component: EditUser},
+        { path: '/favourites', component: FavouriteQuestions},
 
         { path: '/createquestion', component: CreateQuestion},
         { path: '/questions/:slug', component: QuestionReplies},

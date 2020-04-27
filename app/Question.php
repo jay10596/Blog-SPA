@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Reply;
 use App\Category;
+use App\Favourite;
 
 
 class Question extends Model
@@ -40,5 +41,10 @@ class Question extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function favourites()
+    {
+        return $this->hasMany(Favourite::class);
     }
 }

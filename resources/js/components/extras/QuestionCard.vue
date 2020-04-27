@@ -32,24 +32,45 @@
             </p>
         </div>
 
-        <div class="px-6 py-4">
-            <div v-if="question.replies" class="rounded-lg shadow-2xl border w-1/6 border-gray-400 bg-transparent text-xs text-center text-blue-700 font-semibold py-2 px-4">
+        <div class="px-6 py-4 flex items-center">
+            <Favourite :slug="question.slug" :count="question.favourite_count" :favourited="question.favourited"/>
+
+            <div v-if="question.replies" class="rounded-lg shadow-2xl border w-1/6 ml-6 border-gray-400 bg-transparent text-xs text-center text-blue-700 font-semibold py-2 px-4">
                 Total Replies: {{question.replies.length}}
             </div>
         </div>
 
+        <div v-if="message != null && errorQuestionSlug == question.slug" class="px-6 py-4 text-sm text-red-500">
+            {{message}}
+        </div>
     </div>
 </template>
 
 <script>
     import ImageCircle from './ImageCircle'
+    import Favourite from './Favourite'
 
     export default {
         name: 'QuestionCard',
 
-        components: {ImageCircle},
+        components: {ImageCircle, Favourite},
 
         props: ['question'],
+
+
+        data() {
+            return {
+                message: null,
+                errorQuestionSlug: null
+            }
+        },
+
+        created() {
+            EventBus.$on('displayingError', (slug) => {
+                this.errorQuestionSlug = slug
+                this.message = "*Please Login to add this question to favourites!*"
+            })
+        }
     }
 </script>
 

@@ -16,6 +16,9 @@ class QuestionResource extends JsonResource
             'body' => $this->body,
             'created_at' => $this->created_at->diffForHumans(),
 
+            'favourite_count' => $this->favourites->count(),
+            'favourited' => !! $this->favourites->where('user_id', auth()->id())->count(),
+            
             'user_id' => $this->user_id,
             'user_name' => $this->user->name,
             'user_avatar' => $this->user->avatar,

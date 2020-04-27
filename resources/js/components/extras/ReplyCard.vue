@@ -43,7 +43,7 @@
 
         <div v-if="deleteMode" class="bg-black opacity-25 absolute z-0 left-0 top-0 right-0 bottom-0" @click="deleteMode = false"></div>
             
-        <Like :reply="reply"/>
+        <Like :id="reply.id" :count="reply.like_count" :liked="reply.liked"/>
 
     </div>
 </template>

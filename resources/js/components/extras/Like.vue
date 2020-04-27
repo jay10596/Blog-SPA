@@ -1,8 +1,12 @@
 <template>
     <div>
-        <button>
-            <i class="far fa-thumbs-up"></i>Like
+        <button @click="likeIt" :class="color">
+            <i class="fas fa-thumbs-up ml-5"></i> {{count}}
         </button>
+
+        <div v-if="message != null" class="mt-3 ml-5 text-sm text-red-500">
+            {{message}}
+        </div>
     </div>
 </template>
 
@@ -10,37 +14,40 @@
     export default {
         name: 'Like',
 
-        props: ['reply'],
-			        
+        props: ['id', 'count', 'liked'],
+
         data() {
             return {
-                liked: this.reply.liked,
-                count: this.reply.like_count
+                message: null
             }
         },
 
         computed: {
             color() {
-                return this.liked ? 'green' : 'gray'
+                return this.liked ? 'text-green-500' : 'text-gray-700'
             }
         },
 
         methods: {
             likeIt() {
-                if(User.loggedIn) {
+                if(User.loggedIn()) {
                     this.liked ? this.removeLike() : this.addLike()
                     this.liked = !this.liked
+                } else {
+                    this.message = "*Please Login to give a like!*"
                 }
             },
 
             addLike() {
-                axios.post(`/api/${this.reply.id}/like`)
+                axios.post(`/api/replies/${this.id}/like`)
                     .then(res => this.count ++)
+                    .catch(errors => console.log(errors))
             },
 
             removeLike() {
-                axios.delete(`/api/${this.reply.id}/like`)
+                axios.delete(`/api/replies/${this.id}/like`)
                     .then(res => this.count --)
+                    .catch(errors => console.log(errors))
             }
         }
 

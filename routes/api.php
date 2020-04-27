@@ -31,6 +31,9 @@ Route::apiResource('/categories', 'CategoryController');
 
 Route::apiResource('/questions/{question}/replies', 'ReplyController');
 
-Route::post('/{reply}/like', 'LikeController@likeIt');
-Route::delete('/{reply}/like', 'LikeController@unlikeIt');
-Route::get('/replies', 'LikeController@getReplies');
+Route::post('/replies/{reply}/like', 'LikeController@likeIt');
+Route::delete('/replies/{reply}/like', 'LikeController@unlikeIt');
+
+Route::get('/favourites', 'FavouriteController@getQuestions');
+Route::post('/questions/{question}/favourite', 'FavouriteController@favouriteIt');
+Route::delete('/questions/{question}/favourite', 'FavouriteController@unfavouriteIt');
