@@ -3,6 +3,9 @@ module.exports = {
     extend: {
       width: {
         '96': '24rem'
+      },
+      fontSize: {
+        '11xl': '9rem',
       }
     }
   },

@@ -6,15 +6,19 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Laravel\Scout\Searchable;
 
 use App\Question;
 use App\Reply;
 use Carbon\Carbon;
 
+
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
 
+    use Notifiable; //For Jwt
+
+    use Searchable; //For Scout
 
     protected $fillable = [
         'name', 'email', 'password', 'birthday', 'avatar'
