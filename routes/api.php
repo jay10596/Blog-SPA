@@ -42,3 +42,7 @@ Route::delete('/questions/{question}/favourite', 'FavouriteController@unfavourit
 
 
 Route::post('/search', 'SearchController@getUsers');
+
+
+Route::post('/notifications', 'NotificationController@index');
+Route::post('/markasread', 'NotificationController@markAsRead');

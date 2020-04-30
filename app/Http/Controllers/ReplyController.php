@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Reply;
 use App\Question;
+
 use Illuminate\Http\Request;
 use App\Http\Resources\ReplyResource;
+use App\Notifications\NewReplyNotification;
+
 
 class ReplyController extends Controller
 {
@@ -29,6 +32,10 @@ class ReplyController extends Controller
         $request['user_id'] = auth()->user()->id;
 
         $reply = $question->replies()->create($request->all());
+
+        $user = $question->user;
+        
+        $user->notify(new NewReplyNotification($reply));
 
         return (new ReplyResource($reply))->response()->setStatusCode(201);
     }

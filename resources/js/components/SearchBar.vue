@@ -1,6 +1,6 @@
 <template>
-    <div class="flex justify-end">
-        <!-- <div v-if="focus" @click="focus=false" class="bg-black absolute opacity-25 right-0 left-0 top-0 bottom-0 z-10"></div> -->
+    <div class="flex justify-end items-center">
+        <Notifications/>
 
         <SearchTab/>
 
@@ -11,11 +11,12 @@
 <script>
     import SearchTab from './extras/SearchTab'
     import ImageCircle from './extras/ImageCircle'
+    import Notifications from './extras/Notifications'
 
     export default {
         name: "SearchBar",
 
-        components: {ImageCircle, SearchTab},
+        components: {ImageCircle, SearchTab, Notifications},
 
         data() {
             return {
