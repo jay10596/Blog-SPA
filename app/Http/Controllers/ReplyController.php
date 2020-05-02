@@ -35,8 +35,10 @@ class ReplyController extends Controller
 
         $user = $question->user;
         
-        $user->notify(new NewReplyNotification($reply));
-
+        if($reply->user_id != $question->user_id) {
+            $user->notify(new NewReplyNotification($reply));
+        }
+        
         return (new ReplyResource($reply))->response()->setStatusCode(201);
     }
     

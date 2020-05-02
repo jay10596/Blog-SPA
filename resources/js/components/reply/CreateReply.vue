@@ -1,12 +1,14 @@
 <template>
     <div class="my-10">
-        <form class="flex items-center m-3 w-full max-w-sm" @submit.prevent="createReply">
-            <ImageCircle :name="user_name"/>
+        <form class="flex items-stretch m-3" @submit.prevent="createReply">
+            <ImageCircle :name="user.name" :avatar="user.avatar"/>
 
-            <div class="flex items-center border-b border-b-2 border-blue-500 py-2">
-                <input v-model="replyForm.body" class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Category name">
+            <div class="flex flex-col w-full">
+                <p class="ml-2 font-semibold text-md text-blue-600">{{user.name}}</p>
                 
-                <button type="submit" class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded"> Create </button>
+                <textarea v-model="replyForm.body" type="text" class="w-4/6 mx-2 my-2 shadow-inner p-4 border border-gray-400" placeholder="Enter your reply here..." rows="3"></textarea>
+                
+                <button type="submit" class="w-16 mx-2 bg-blue-500 hover:bg-blue-700 text-sm text-white py-1 px-2 rounded"> Create </button>
             </div>
         </form>
     </div>
@@ -26,13 +28,15 @@
                     body: ''
                 },
                 errors: {},
-                user_name: ''
+                user: ''
             }
         },
 
         created() {
             if(User.loggedIn()) {
-                this.user_name = User.name()
+                axios.post('/api/auth/me')
+                    .then(res => this.user = res.data)
+                    .catch(errors => console.log(errors))
             }
         },
 

@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-end items-center">
-        <Notifications/>
+        <div v-if="userLoggedIn"><Notifications/></div>
 
         <SearchTab/>
 
@@ -38,6 +38,10 @@
                 }
 
                 return '?'
+            },
+
+            userLoggedIn() {
+                return User.loggedIn()
             }
         },
     }

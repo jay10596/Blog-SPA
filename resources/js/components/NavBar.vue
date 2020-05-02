@@ -1,14 +1,14 @@
 <template>
-    <div class="flex-col">
+    <div class="flex-col h-screen overflow-y-hidden">
         <div class="text-center">
-            <i class="fab fa-blogger font-normal text-11xl mt-10 mb-5 text-blue-800"></i>
+            <i class="fab fa-blogger font-normal text-11xl mt-10 mb-4 text-blue-800"></i>
         </div>
 
-        <router-link v-for="item in items" :key="item.title" v-if="item.show" :to="item.to" class="font-normal text-xl mb-2">
-            <div class="flex items-center m-5">
-                <i :class="item.icon" class="h-12 w-12 text-blue-800 m-2 hover:text-blue-500"></i>
+        <router-link v-for="item in items" :key="item.title" v-if="item.show" :to="item.to" class=" font-normal text-xl">
+            <div class="flex items-center m-8">
+                <i :class="item.icon" class="h-12 w-12 text-blue-800 mx-2 hover:text-blue-500"></i>
                 
-                <p class="text-gray-700 font-bold text-xs uppercase m-2 hover:text-blue-500">
+                <p class="text-gray-700 font-bold text-xs uppercase mx-2 hover:text-blue-500">
                     {{item.title}}
                 </p>
             </div>

@@ -24,7 +24,7 @@
 
         <CreateReply v-if="deleteMode == false"/>
 
-        <div v-for="reply in replies" :key="reply.id" v-if="reply">
+        <div v-for="reply in replies" :key="reply.id" v-if="reply" class="overflow-scroll">
             <ReplyCard :reply="reply"/>
         </div>
 
