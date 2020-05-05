@@ -1,7 +1,9 @@
 <template>
     <div class="flex-col h-screen overflow-y-hidden">
         <div class="text-center">
-            <i class="fab fa-blogger font-normal text-11xl mt-10 mb-4 text-blue-800"></i>
+            <router-link to="/">
+                <i class="fab fa-blogger font-normal text-11xl mt-10 mb-4 text-blue-800"></i>
+            </router-link>
         </div>
 
         <router-link v-for="item in items" :key="item.title" v-if="item.show" :to="item.to" class=" font-normal text-xl">

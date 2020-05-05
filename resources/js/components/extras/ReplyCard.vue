@@ -1,5 +1,5 @@
 <template>
-    <div class="w-3/6 m-3 p-3 bg-transparent rounded shadow-xl">
+    <div class="w-4/6 m-3 p-3 bg-white rounded shadow-xl">
         <div class="px-4 py-4">
             <div class="flex items-center">
                 <ImageCircle :name="reply.user_name"/>
@@ -16,10 +16,10 @@
                     <button @click="changeEditMode" class="mx-2 px-2 py-1 border border-blue-600 text-blue-600 text-xs rounded focus:outline-none outline-none hover:bg-blue-600 hover:text-white"> <i class="fas fa-edit"></i> Edit</button>
                     <button @click="deleteMode = true" class="mx-2 px-2 py-1 border border-red-600 text-red-600 text-xs rounded focus:outline-none hover:bg-red-600 hover:text-white"> <i class="fas fa-trash-alt"></i> Delete</button>
 
-                    <div v-if="deleteMode" class="absolute bg-blue-900 rounded-lg right-0 text-white w-64 z-10 mt-10 p-3">
+                    <div v-if="deleteMode" class="absolute bg-blue-900 rounded-lg right-0 text-white w-64 z-10 mt-8 p-2">
                         <p>Are you sure you want to delete this reply?</p>
 
-                        <div class="flex items-center justify-end mt-3">
+                        <div class="flex items-center justify-end mt-2">
                             <button @click="deleteReply" class="mx-2 px-4 py-2 bg-red-500 rounded-full text-sm focus:outline-none hover:bg-red-600">Delete</button>
                             <button @click="deleteMode = false" class="text-sm focus:outline-none hover:text-gray-400">Cancel</button>
                         </div>
@@ -41,11 +41,9 @@
             </p>
         </div>
 
-        
-
         <div v-if="deleteMode" class="bg-black opacity-25 absolute z-0 left-0 top-0 right-0 bottom-0" @click="deleteMode = false"></div>
             
-        <Like :id="reply.id" :count="reply.like_count" :liked="reply.liked"/>
+        <Like :reply="reply"/>
 
     </div>
 </template>
@@ -80,7 +78,10 @@
         methods: {
             deleteReply() {
                 axios.delete(`/api/questions/${this.$route.params.slug}/replies/${this.reply.id}`)
-                    .then(res => EventBus.$emit('deletingReply', res.data.data))
+                    .then(res => {
+                        this.deleteMode = false
+                        EventBus.$emit('deletingReply', res.data.data)
+                    })
                     .catch(error => this.errors = error.response.data.error)
             },
 

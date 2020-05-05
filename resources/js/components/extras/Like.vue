@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click="likeIt" :class="color">
+        <button @click="likeIt" :class="color" class="focus:outline-none">
             <i class="fas fa-thumbs-up ml-5"></i> {{count}}
         </button>
 
@@ -14,10 +14,13 @@
     export default {
         name: 'Like',
 
-        props: ['id', 'count', 'liked'],
+        props: ['reply'],
 
         data() {
             return {
+                id: this.reply.id,
+                count: this.reply.like_count,
+                liked: this.reply.liked,
                 message: null
             }
         },
@@ -40,13 +43,13 @@
 
             addLike() {
                 axios.post(`/api/replies/${this.id}/like`)
-                    .then(res => this.count ++)
+                    .then(res => this.count++)
                     .catch(errors => console.log(errors))
             },
 
             removeLike() {
                 axios.delete(`/api/replies/${this.id}/like`)
-                    .then(res => this.count --)
+                    .then(res => this.count--)
                     .catch(errors => console.log(errors))
             }
         }

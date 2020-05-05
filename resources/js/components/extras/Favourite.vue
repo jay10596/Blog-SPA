@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col">
-        <button @click="favouriteIt" :class="color">
+        <button @click="favouriteIt" :class="color" class="focus:outline-none">
             <i class="fas fa-heart"></i> {{count}}
         </button>
     </div>

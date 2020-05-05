@@ -1,5 +1,5 @@
 <template>
-    <div class="h-screen">
+    <div class="h-screen w-4/6 ml-4">
         <div class="mx-3 my-6">
             <a href="#" class="font-semibold text-blue-800 hover:text-blue-500" @click="$router.back()">
                 <i class="fas fa-angle-double-left mr-1"></i> Back
@@ -8,9 +8,9 @@
         
         <QuestionCard :question="question"/>
 
-        <div v-if="own" class="relative">
-            <button @click="editQuestion" class="mx-3 px-4 py-2 border border-blue-400 text-blue-400 text-sm rounded">edit</button>
-            <button @click="deleteMode = true" class="px-4 py-2 border border-red-500 text-red-500 text-sm rounded">delete</button>
+        <div v-if="own" class="relative mx-3">
+            <button @click="editQuestion" class="mt-8 uppercase rounded-lg shadow-2xl border border-gray-300 text-xs text-gray-900 bg-white hover:border-blue-700 hover:text-blue-700 font-semibold py-2 px-3 focus:outline-none"><i class="fas fa-edit"></i> Edit</button>
+            <button @click="deleteMode = true" class="mt-8 uppercase rounded-lg shadow-2xl border border-gray-300 text-xs text-gray-900 bg-white hover:border-red-500 hover:text-red-500 font-semibold py-2 px-3 focus:outline-none"><i class="fas fa-trash"></i> Delete</button>
         
             <div v-if="deleteMode" class="ml-3 absolute bg-blue-900 rounded-lg text-white w-2/6 z-10 mt-2 p-3">
                 <p>Are you sure you want to delete this contact?</p>
@@ -22,10 +22,12 @@
             </div>
         </div>
 
-        <CreateReply v-if="deleteMode == false"/>
+        <CreateReply v-if="loggedIn"/>
 
-        <div v-for="reply in replies" :key="reply.id" v-if="reply" class="overflow-scroll">
-            <ReplyCard :reply="reply"/>
+        <div class="ml-24 border-l-4 border-blue-500">
+            <div v-for="reply in replies" :key="reply.id" v-if="reply" class="">
+                <ReplyCard :reply="reply"/>
+            </div>
         </div>
 
         <div v-if="deleteMode" class="bg-black opacity-25 absolute z-0 left-0 top-0 right-0 bottom-0" @click="deleteMode = false"></div>
@@ -47,6 +49,10 @@
         computed: {
             own() {
                 return User.own(this.question.user_id)
+            },
+
+            loggedIn() {
+                return User.loggedIn()
             }
         },
 

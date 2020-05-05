@@ -1,61 +1,79 @@
 <template>
-    <div class="w-full h-full flex justify-center items-center bg-fixed">
-        <div class="bg-transparent opacity-100 w-4/6 rounded-lg shadow-2xl border border-red-900 p-6">
+    <div class="w-full my-16 flex justify-center">
+        <form @submit.prevent="createQuestion" class="px-8 pt-6 pb-8 mb-4 w-3/6 bg-white shadow-2xl rounded justify-center absolute">
+            <h1 class="text-3xl py-3 text-blue-800">Ask Question!</h1>
 
-            <form class="mt-8" @submit.prevent="createQuestion">
+            <div class="flex pb-6">
+                <ImageCircle :name="user.name" :avatar="user.avatar"/>
 
-                <div class="reletive">
-                    <label for="title" class="uppercase text-red-500 text-xs font-bold absolute p-1">Title</label>
+                <router-link v-if="user" :to="'/users/' + user.id" class="font-semibold text-md ml-2 text-blue-600">
+                    {{user.name}}
 
-                    <div class="col-md-6">
-                        <input v-model="questionForm.title" class="pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100" type="text" placeholder="Add the title">
+                    <p class="text-gray-600 text-xs font-light">
+                        {{user.email}}
+                    </p>
+                </router-link>
+            </div>
 
-                        <span v-if="errors.title" class="text-gray-100 pt-1 text-sm" role="alert">
-                            {{errors.title[0]}}
-                        </span>
-                    </div>
+            <div class="reletive">
+                <label for="title" class="uppercase text-blue-800 text-xs font-bold absolute p-2">Title</label>
+
+                <div class="col-md-6">
+                    <input v-model="questionForm.title" class="pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline" type="text" placeholder="Add the title">
+
+                    <span v-if="errors.title" class="text-red-700 pt-1 text-sm" role="alert">
+                        {{errors.title[0]}}
+                    </span>
                 </div>
+            </div>
 
-                <div class="pt-3">
-                    <label for="body" class="uppercase text-red-500 text-xs font-bold absolute p-1">Write the description</label>
-
-                    <div class="">
-                        <textarea v-model="questionForm.body" class="pt-8 w-full rounded bg-transparent shadow-2xl p-1 outline-none text-gray-100 border border-red-900 focus:border-blue-100" type="text" placeholder="Write the description">
-                        
-                        </textarea>
-                        <span v-if="errors.body" class="text-gray-100 pt-1 text-sm" role="alert">
-                            {{errors.body[0]}}
-                        </span>
-                    </div>
-                </div>
-
-                 <div class="pt-3">
-                    <label for="category_id" class="uppercase text-red-500 text-xs font-bold absolute p-1">Category</label>
-
-                    <div class="">
-                        <select v-model="questionForm.category_id" class="block appearance-none w-full bg-transparent border border-red-900 text-gray-100 pt-6 p-1 rounded leading-tight focus:outline-none focus:bg-transparent focus:border-red-500">
-                            <option v-for="category in categories" :key="category.id" :value="category.id">{{category.name}}</option>
-                        </select>
-                        
-                        <span v-if="errors.category_id" class="text-gray-100 pt-1 text-sm" role="alert">
-                            {{errors.category_id[0]}}
-                        </span>
-                    </div>
-                </div>
+            <div class="pt-3">
+                <label for="body" class="uppercase text-blue-800 text-xs font-bold absolute p-2">Write the message</label>
 
                 <div class="">
-                    <button type="submit" class="mt-8 uppercase rounded-lg shadow-2xl border border-red-900 bg-transparent text-gray-100 hover:bg-gray-100 hover:text-red-900 font-semibold w-full h-8 px-2 text-left">
-                        Post Question
-                    </button>
+                    <textarea v-model="questionForm.body" rows="3" class="pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline" type="text" placeholder="Write the description">
+                    
+                    </textarea>
+                    <span v-if="errors.body" class="text-red-700 pt-1 text-sm" role="alert">
+                        {{errors.body[0]}}
+                    </span>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="pt-3">
+                <label for="category_id" class="uppercase text-blue-800 text-xs font-bold absolute p-2">Category</label>
+
+                <div class="">
+                    <select v-model="questionForm.category_id" class="pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline">
+                        <option v-for="category in categories" :key="category.id" :value="category.id">{{category.name}}</option>
+                    </select>
+                    
+                    <span v-if="errors.category_id" class="text-red-700 pt-1 text-sm" role="alert">
+                        {{errors.category_id[0]}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="">
+                <button type="submit" class="mt-8 uppercase rounded-lg shadow-2xl border text-sm bg-gray-100 text-gray-100 bg-blue-700 hover:border-blue-800 hover:bg-transparent hover:text-blue-800 font-semibold py-2 px-4 focus:outline-none">
+                    Post
+                </button>
+
+                <router-link to="/" class="mt-8 text-right uppercase rounded-lg text-blue-800 border text-sm hover:border-blue-800 font-semibold py-2 px-4 focus:outline-none">
+                    Cancel
+                </router-link>
+            </div>
+        </form>
     </div>
 </template>
 
 <script>
+    import ImageCircle from '../extras/ImageCircle'
+
     export default {
         name: 'CreateQuestion',
+
+        components: {ImageCircle},
 
         data() {
             return {
@@ -65,6 +83,7 @@
                     category_id: null
                 },
                 categories: {},
+                user: {},
                 errors: {}
             }
         },
@@ -77,6 +96,12 @@
             axios.get('/api/categories')
                 .then(res => this.categories = res.data.data)
                 .catch(errors => console.log(errors))
+
+            axios.post('/api/auth/me')
+                    .then(res => {
+                        this.user = res.data
+                    })
+                    .catch(errors => console.log(errors))
         },
 
         methods: {

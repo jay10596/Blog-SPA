@@ -8,7 +8,7 @@
                 
                 <textarea v-model="replyForm.body" type="text" class="w-4/6 mx-2 my-2 shadow-inner p-4 border border-gray-400" placeholder="Enter your reply here..." rows="3"></textarea>
                 
-                <button type="submit" class="w-16 mx-2 bg-blue-500 hover:bg-blue-700 text-sm text-white py-1 px-2 rounded"> Create </button>
+                <button type="submit" class="w-24 mt-4 ml-1 uppercase rounded-lg shadow-2xl border border-gray-400 text-xs text-gray-900 bg-white hover:border-blue-700 hover:text-blue-700 font-semibold py-2 px-2 focus:outline-none"><i class="fas fa-reply"></i> Reply</button>
             </div>
         </form>
     </div>

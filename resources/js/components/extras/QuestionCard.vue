@@ -1,6 +1,6 @@
 <template>
     <div class="m-3 bg-white rounded overflow-hidden shadow-lg">
-        <div class="px-6 py-4">
+        <div class="px-6 py-3">
             <div class="flex items-center justify-between">
                 <div class="flex">
                     <ImageCircle :name="question.user_name" :avatar="question.user_avatar"/>
@@ -23,11 +23,11 @@
         </div>
         
         <div class="px-6 py-4">            
-            <router-link v-if="question" :to="'/questions/' + question.slug" class="font-normal text-lg mb-2">
+            <router-link v-if="question" :to="'/questions/' + question.slug" class="font-normal text-gray-900 text-lg">
                 {{question.title}}
             </router-link>
 
-            <p class="text-gray-800 text-sm">
+            <p class="text-gray-800 text-sm mt-2">
                 {{question.body}}
             </p>
         </div>
@@ -35,7 +35,7 @@
         <div class="px-6 py-4 flex items-center">
             <Favourite :slug="question.slug" :count="question.favourite_count" :favourited="question.favourited"/>
 
-            <div v-if="question.replies" class="rounded-lg shadow-2xl border w-34 ml-6 border-gray-400 bg-transparent text-xs text-center text-blue-700 font-semibold py-2 px-4">
+            <div v-if="question.replies" class="rounded-lg shadow-2xl border w-1/6 ml-6 border-gray-400 bg-transparent text-xs text-center text-blue-700 font-semibold py-2 px-4">
                 Total Replies: {{question.replies.length}}
             </div>
         </div>
