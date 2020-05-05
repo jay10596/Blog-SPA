@@ -4,7 +4,7 @@
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Name</label>
                 
-                <input v-model="userForm.name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="User Name">
+                <input v-if="userForm.name" v-model="userForm.name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="User Name">
                 
                 <span v-if="errors.name" class="text-red-700 pt-1 text-sm" role="alert">
                         {{errors.name[0]}}
@@ -99,7 +99,14 @@
                 this.errors = {}
                 axios.put(`/api/users/${this.user.id}`, this.userForm)
                     .then(res => window.location = '/')
-                    .catch(errors => this.errors = errors.response.data.errors)
+                    .catch(errors => {
+                        this.errors = errors.response.data.errors
+
+                        if(errors.response.status === 500)
+                        {
+                            window.location = '/'
+                        }
+                    })
             },
         }
     }

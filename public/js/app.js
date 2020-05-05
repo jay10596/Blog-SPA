@@ -8515,7 +8515,11 @@ __webpack_require__.r(__webpack_exports__);
       axios.put("/api/users/".concat(this.user.id), this.userForm).then(function (res) {
         return window.location = '/';
       })["catch"](function (errors) {
-        return _this3.errors = errors.response.data.errors;
+        _this3.errors = errors.response.data.errors;
+
+        if (errors.response.status === 500) {
+          window.location = '/';
+        }
       });
     }
   }
@@ -35115,28 +35119,34 @@ var render = function() {
             [_vm._v("Name")]
           ),
           _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.userForm.name,
-                expression: "userForm.name"
-              }
-            ],
-            staticClass:
-              "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
-            attrs: { id: "username", type: "text", placeholder: "User Name" },
-            domProps: { value: _vm.userForm.name },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+          _vm.userForm.name
+            ? _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.userForm.name,
+                    expression: "userForm.name"
+                  }
+                ],
+                staticClass:
+                  "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+                attrs: {
+                  id: "username",
+                  type: "text",
+                  placeholder: "User Name"
+                },
+                domProps: { value: _vm.userForm.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.userForm, "name", $event.target.value)
+                  }
                 }
-                _vm.$set(_vm.userForm, "name", $event.target.value)
-              }
-            }
-          }),
+              })
+            : _vm._e(),
           _vm._v(" "),
           _vm.errors.name
             ? _c(
