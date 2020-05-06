@@ -10,12 +10,12 @@
         
         <div v-if="isOpen" @click="isOpen = false" class="fixed bg-black opacity-25 right-0 left-0 top-0 bottom-0"></div>
 
-        <div v-if="isOpen" class="absolute right-0 mt-4 w-96 shadow-xl bg-white rounded-lg">
-            <div v-for="item in unread" :key="item.id" class="py-3 px-3 border-t border-gray-300 bg-blue-100 rounded-lg">
+        <div v-if="isOpen" class="absolute right-0 mt-4 w-96 shadow-xl bg-white">
+            <div v-for="item in unread" :key="item.id" class="py-3 px-3 border-b border-gray-300 bg-blue-100 hover:bg-white border-b hover:border-blue-500">
                 <NotificationCard :item="item"/>
             </div>
 
-            <div v-for="item in read" :key="item.id" class="py-3 px-3 border-t border-gray-300">
+            <div v-for="item in read" :key="item.id" class="py-3 px-3 border-b border-gray-300 hover:bg-blue-100 border-b hover:border-blue-500">
                 <NotificationCard :item="item"/>
             </div>
         </div>

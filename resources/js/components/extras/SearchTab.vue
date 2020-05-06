@@ -7,11 +7,11 @@
             
             <input type="text" id="searchTerm" v-model="searchTerm" @input="searchUsers" @focus="focus = true" placeholder="Search the user" class="rounded-full w-64 border border-gray-400 pl-10 p-2 mr-3 focus:outline-none text-sm text-black focus:shadow focus:border-blue-600">
             
-            <div v-if="focus" class="absolute bg-white rounded-lg p-4 w-96 right-0 mr-6 mt-2 shadow z-20">
-                <div v-if="searchResult.length == 0">No Result found for '{{searchTerm}}'</div>
+            <div v-if="focus" class="absolute bg-white rounded-lg w-96 right-0 mr-6 mt-2 shadow z-20">
+                <div v-if="searchResult.length == 0" class="p-2">No Result found for '{{searchTerm}}'</div>
 
                 <div v-for="result in searchResult" :key='result.id' @click="focus=false">
-                    <router-link :to="'/users/' + result.id" class="flex items-center p-2 border-b-2 border-gray-100 hover:bg-gray-100 hover:border-blue-500">
+                    <router-link :to="'/users/' + result.id" class="flex items-center rounded-lg p-2 border-b border-gray-100 hover:bg-gray-100 hover:border-blue-500">
                         <ImageCircle :name="result.name" :avatar="result.avatar" class="mr-3"/>
                         
                         {{result.name}}

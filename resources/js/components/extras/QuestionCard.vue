@@ -35,7 +35,7 @@
         <div class="px-6 py-4 flex items-center">
             <Favourite :slug="question.slug" :count="question.favourite_count" :favourited="question.favourited"/>
 
-            <div v-if="question.replies" class="rounded-lg shadow-2xl border w-1/6 ml-6 border-gray-400 bg-transparent text-xs text-center text-blue-700 font-semibold py-2 px-4">
+            <div v-if="question.replies" class="rounded-lg shadow-2xl border w-32 ml-6 border-gray-400 bg-transparent text-xs text-center text-blue-700 font-semibold py-2 px-4">
                 Total Replies: {{question.replies.length}}
             </div>
         </div>
@@ -56,7 +56,6 @@
         components: {ImageCircle, Favourite},
 
         props: ['question'],
-
 
         data() {
             return {

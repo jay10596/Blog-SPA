@@ -31,6 +31,16 @@
             }
         },
 
+        created() {
+            Echo.channel('likeChannel')
+                .listen('LikeEvent', (e) => {
+                    if(this.reply.id == e.id) {
+                        e.type == 1? this.count ++ : this.count --
+                    }
+                    //console.log(e);
+                });
+        },
+
         methods: {
             likeIt() {
                 if(User.loggedIn()) {

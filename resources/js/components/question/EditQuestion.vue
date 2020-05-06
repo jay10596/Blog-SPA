@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-                <div class="pt-3">
+            <div class="pt-3">
                 <label for="category_id" class="uppercase text-blue-800 text-xs font-bold absolute p-2">Category</label>
 
                 <div class="">

@@ -6,9 +6,9 @@
             <div class="flex flex-col w-full">
                 <p class="ml-2 font-semibold text-md text-blue-600">{{user.name}}</p>
                 
-                <textarea v-model="replyForm.body" type="text" class="w-4/6 mx-2 my-2 shadow-inner p-4 border border-gray-400" placeholder="Enter your reply here..." rows="3"></textarea>
+                <textarea v-model="replyForm.body" type="text" class="w-4/6 mx-2 my-2 shadow-inner p-4 border border-gray-500" placeholder="Enter your reply here..." rows="3"></textarea>
                 
-                <button type="submit" class="w-24 mt-4 ml-1 uppercase rounded-lg shadow-2xl border border-gray-400 text-xs text-gray-900 bg-white hover:border-blue-700 hover:text-blue-700 font-semibold py-2 px-2 focus:outline-none"><i class="fas fa-reply"></i> Reply</button>
+                <button type="submit" class="w-24 mt-4 ml-1 uppercase rounded-lg shadow-2xl border border-gray-500 text-xs text-gray-900 bg-white hover:border-blue-700 hover:text-blue-700 font-semibold py-2 px-2 focus:outline-none"><i class="fas fa-reply"></i> Reply</button>
             </div>
         </form>
     </div>
@@ -46,6 +46,7 @@
                     .then(res => {
                         this.replyForm.body = ''
                         EventBus.$emit('creatingReply', res.data.data)
+                        EventBus.$emit('changingMaxRepliesCount')
                     })
                     .catch(error => this.errors = error.response.data.error)
             }

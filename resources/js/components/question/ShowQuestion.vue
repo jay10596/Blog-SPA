@@ -1,5 +1,5 @@
 <template>
-    <div class="h-screen w-4/6 ml-4">
+    <div class="h-screen ml-4">
         <div class="mx-3 my-6">
             <a href="#" class="font-semibold text-blue-800 hover:text-blue-500" @click="$router.back()">
                 <i class="fas fa-angle-double-left mr-1"></i> Back
@@ -25,8 +25,8 @@
         <CreateReply v-if="loggedIn"/>
 
         <div class="ml-24 border-l-4 border-blue-500">
-            <div v-for="reply in replies" :key="reply.id" v-if="reply" class="">
-                <ReplyCard :reply="reply"/>
+            <div v-for="(reply, index) in replies" :key="reply.id" v-if="reply" class="">
+                <ReplyCard :reply="reply" :index="index"/>
             </div>
         </div>
 
@@ -82,10 +82,11 @@
                     this.replies.unshift(reply)
                 })
 
-                EventBus.$on('deletingReply', (reply) => {
-                    this.replies.splice(reply, 1)
+                EventBus.$on('deletingReply', (index) => {
+                    this.replies.splice(index, 1)
                 })
-            }
+
+            },
         },    
     }
 </script>

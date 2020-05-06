@@ -12,8 +12,9 @@ class NotificationResource extends JsonResource
             'id' => $this->id,
             'user_name' => $this->data['user_name'],
             'user_avatar' => $this->data['user_avatar'],
-            'question' => $this->data['question'],
+            'questionOrReply' => $this->data['questionOrReply'],
             'path' => $this->data['path'],
+            'message' => $this->data['message'],
             'created_at' => $this->created_at->diffForHumans()
         ];
     }

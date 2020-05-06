@@ -7,7 +7,7 @@ use App\Question;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\ReplyResource;
-use App\Notifications\NewReplyNotification;
+use App\Notifications\ReplyNotification;
 
 
 class ReplyController extends Controller
@@ -36,7 +36,7 @@ class ReplyController extends Controller
         $user = $question->user;
         
         if($reply->user_id != $question->user_id) {
-            $user->notify(new NewReplyNotification($reply));
+            $user->notify(new ReplyNotification($reply));
         }
         
         return (new ReplyResource($reply))->response()->setStatusCode(201);

@@ -9,8 +9,7 @@ use Illuminate\Notifications\Notification;
 
 use App\Reply;
 
-
-class NewReplyNotification extends Notification
+class LikeNotification extends Notification
 {
     use Queueable;
 
@@ -29,8 +28,9 @@ class NewReplyNotification extends Notification
         return [
             'user_name' => $this->reply->user->name,
             'user_avatar' => $this->reply->user->avatar,
-            'question' => $this->reply->question->title,
+            'questionOrReply' => $this->reply->body,
             'path' => $this->reply->question->path,
+            'message' => 'has liked your reply.'
         ];
     }
 }

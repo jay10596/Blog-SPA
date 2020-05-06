@@ -7,6 +7,8 @@ use App\Reply;
 
 use Illuminate\Http\Request;
 use App\Events\LikeEvent;
+use App\Notifications\LikeNotification;
+
 
 class LikeController extends Controller
 {
@@ -16,11 +18,21 @@ class LikeController extends Controller
     }
     
     public function likeIt(Reply $reply)
-    {
+    {   //Creates reply
         $reply->likes()->create([ 
             'user_id' => auth()-> id(),
         ]);
 
+        //Sends notification
+        $like = Like::orderby('created_at', 'desc')->first();
+        
+        $user = $reply->user;
+        
+        if($like->user_id != $reply->user_id) {
+            $user->notify(new LikeNotification($reply));
+        }
+
+        //Makes it live
         broadcast(new LikeEvent($reply->id, 1))->toOthers();
     }
 

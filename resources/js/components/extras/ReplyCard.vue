@@ -13,8 +13,8 @@
                 </router-link>
                 
                 <div v-if="own" class="relative flex px-6 mb-4 right-0 justify-end w-full">            
-                    <button @click="changeEditMode" class="mx-2 px-2 py-1 border border-blue-600 text-blue-600 text-xs rounded focus:outline-none outline-none hover:bg-blue-600 hover:text-white"> <i class="fas fa-edit"></i> Edit</button>
-                    <button @click="deleteMode = true" class="mx-2 px-2 py-1 border border-red-600 text-red-600 text-xs rounded focus:outline-none hover:bg-red-600 hover:text-white"> <i class="fas fa-trash-alt"></i> Delete</button>
+                    <button @click="changeEditMode" class="w-16 mx-2 px-2 py-1 border border-blue-600 text-blue-600 text-xs rounded focus:outline-none outline-none hover:bg-blue-600 hover:text-white"> <i class="fas fa-edit"></i> Edit</button>
+                    <button @click="deleteMode = true" class="w-20 mx-2 px-2 py-1 border border-red-600 text-red-600 text-xs rounded focus:outline-none hover:bg-red-600 hover:text-white"> <i class="fas fa-trash-alt"></i> Delete</button>
 
                     <div v-if="deleteMode" class="absolute bg-blue-900 rounded-lg right-0 text-white w-64 z-10 mt-8 p-2">
                         <p>Are you sure you want to delete this reply?</p>
@@ -57,7 +57,7 @@
 
         components: {ImageCircle, Like},
 
-        props: ['reply'],
+        props: ['reply', 'index'],
 
         computed: {
             own() {
@@ -80,7 +80,8 @@
                 axios.delete(`/api/questions/${this.$route.params.slug}/replies/${this.reply.id}`)
                     .then(res => {
                         this.deleteMode = false
-                        EventBus.$emit('deletingReply', res.data.data)
+                        EventBus.$emit('deletingReply', this.index)
+                        EventBus.$emit('changingMaxRepliesCount')
                     })
                     .catch(error => this.errors = error.response.data.error)
             },

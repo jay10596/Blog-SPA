@@ -22,7 +22,7 @@ Route::group([
 
 });
 
-
+//CRUD
 Route::apiResource('/users', 'UserController');
 
 Route::apiResource('/questions', 'QuestionController');
@@ -32,17 +32,26 @@ Route::apiResource('/categories', 'CategoryController');
 Route::apiResource('/questions/{question}/replies', 'ReplyController');
 
 
+//LIKE
 Route::post('/replies/{reply}/like', 'LikeController@likeIt');
 Route::delete('/replies/{reply}/like', 'LikeController@unlikeIt');
 
 
+//FAVOURITE
 Route::get('/favourites', 'FavouriteController@getQuestions');
 Route::post('/questions/{question}/favourite', 'FavouriteController@favouriteIt');
 Route::delete('/questions/{question}/favourite', 'FavouriteController@unfavouriteIt');
 
 
+//SEARCH
 Route::post('/search', 'SearchController@getUsers');
 
 
+//NOTIFICATIONS
 Route::post('/notifications', 'NotificationController@index');
 Route::post('/markasread', 'NotificationController@markAsRead');
+
+
+//COUNT
+Route::post('/maximumreplies', 'CountController@maxReplies');
+
