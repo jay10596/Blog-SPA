@@ -54,4 +54,5 @@ Route::post('/markasread', 'NotificationController@markAsRead');
 
 //COUNT
 Route::post('/maximumreplies', 'CountController@maxReplies');
+Route::post('/maximumquestions', 'CountController@maxQuestions');
 

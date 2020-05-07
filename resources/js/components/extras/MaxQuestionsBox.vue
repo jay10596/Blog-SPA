@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-wrap justify-center overflow-auto h-96">
-        <div v-for="user in userReplies" :key="user.id">
+        <div v-for="user in userQuestions" :key="user.id">
             <router-link :to="'/users/' + user[0].user_id">
                 <div v-if="user[0].user_avatar != null">
                     <img :src="user[0].user_avatar" class="flex justify-center object-cover items-center w-32 h-32 m-3 rounded shadow-xl border-2 hover:border-blue-600" alt="Profile Pic">
@@ -20,35 +20,21 @@
 
 <script>
 export default {
-    name: 'MaxRepliesBox',
+    name: 'MaxQuestionsBox',
 
     data() {
         return {
-            userReplies: '',
+            userQuestions: '',
         }
     },
 
     created() {
-        axios.post('/api/maximumreplies', {
+        axios.post('/api/maximumquestions', {
             slug: this.$route.params.slug
         })
-            .then(res => this.userReplies = res.data)
+            .then(res => this.userQuestions = res.data)
             .catch(errors => console.log(errors))
-
-        this.listen()
     },
-
-    methods: {
-        listen() {
-             EventBus.$on('changingMaxRepliesCount', () => {
-                axios.post('/api/maximumreplies', {
-                    slug: this.$route.params.slug
-                })
-                    .then(res => this.userReplies = res.data)
-            })
-        }
-    }
-
 }
 </script>
 

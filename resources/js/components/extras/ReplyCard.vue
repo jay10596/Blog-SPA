@@ -1,20 +1,22 @@
 <template>
     <div class="w-4/6 m-3 p-3 bg-white rounded shadow-xl">
         <div class="px-4 py-4">
-            <div class="flex items-center">
-                <ImageCircle :name="reply.user_name"/>
+            <div class="w-full flex items-center">
+                <div class="w-5/6 flex items-center">
+                    <ImageCircle :name="reply.user_name" :avatar="reply.user_avatar"/>
 
-                <router-link :to="'/users/' + reply.user_id" class="font-semibold text-md ml-2 text-blue-600 w-full">
-                    {{reply.user_name}}
+                    <router-link :to="'/users/' + reply.user_id" class="font-semibold text-md ml-2 text-blue-600">
+                        {{reply.user_name}}
 
-                    <p class="text-gray-600 text-xs font-light">
-                        {{reply.created_at}}
-                    </p>
-                </router-link>
+                        <p class="text-gray-600 text-xs font-light">
+                            {{reply.created_at}}
+                        </p>
+                    </router-link>
+                </div>
                 
-                <div v-if="own" class="relative flex px-6 mb-4 right-0 justify-end w-full">            
-                    <button @click="changeEditMode" class="w-16 mx-2 px-2 py-1 border border-blue-600 text-blue-600 text-xs rounded focus:outline-none outline-none hover:bg-blue-600 hover:text-white"> <i class="fas fa-edit"></i> Edit</button>
-                    <button @click="deleteMode = true" class="w-20 mx-2 px-2 py-1 border border-red-600 text-red-600 text-xs rounded focus:outline-none hover:bg-red-600 hover:text-white"> <i class="fas fa-trash-alt"></i> Delete</button>
+                <div v-if="own" class="relative w-1/6 flex mb-4justify-end">            
+                    <button @click="changeEditMode" class="w-16 mx-2 px-2 py-1 border border-blue-600 text-blue-600 text-xs rounded focus:outline-none outline-none hover:bg-blue-600 hover:text-white"> <i class="fas fa-edit"></i> </button>
+                    <button @click="deleteMode = true" class="w-20 mx-2 px-2 py-1 border border-red-600 text-red-600 text-xs rounded focus:outline-none hover:bg-red-600 hover:text-white"> <i class="fas fa-trash-alt"></i> </button>
 
                     <div v-if="deleteMode" class="absolute bg-blue-900 rounded-lg right-0 text-white w-64 z-10 mt-8 p-2">
                         <p>Are you sure you want to delete this reply?</p>

@@ -26,7 +26,7 @@
             </div>
 
             <div class="mb-4">
-                <button type="submit" class="mt-8 uppercase rounded-lg shadow-2xl border border-blue-800 bg-transparent text-blue-800 hover:bg-gray-100 hover:text-gray-100 hover:bg-blue-700 font-semibold py-2 px-4">
+                <button type="submit" class="mt-8 uppercase rounded-lg shadow-2xl border border-blue-800 bg-transparent text-blue-800 hover:bg-gray-100 hover:text-gray-100 hover:bg-blue-700 focus:outline-none font-semibold py-2 px-4">
                     Login
                 </button>
             </div>
