@@ -10,8 +10,16 @@ use Illuminate\Support\Facades\Event;
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-        'App\Events\LikeEvent' => [
-            'App\Listeners\LikeEventListener',
+        'App\Events\RemoveLikeEvent' => [
+            'App\Listeners\RemoveLikeEventListener',
+        ],
+
+        'App\Events\RemoveReplyEvent' => [
+            'App\Listeners\RemoveReplyEventListener',
+        ],
+
+        'App\Events\FavouriteEvent' => [
+            'App\Listeners\FavouriteEventListener',
         ],
     ];
 

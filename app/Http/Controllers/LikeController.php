@@ -6,7 +6,7 @@ use App\Like;
 use App\Reply;
 
 use Illuminate\Http\Request;
-use App\Events\LikeEvent;
+use App\Events\RemoveLikeEvent;
 use App\Notifications\LikeNotification;
 
 
@@ -18,7 +18,7 @@ class LikeController extends Controller
     }
     
     public function likeIt(Reply $reply)
-    {   //Creates reply
+    {   //Adds like
         $reply->likes()->create([ 
             'user_id' => auth()-> id(),
         ]);
@@ -31,16 +31,14 @@ class LikeController extends Controller
         if($like->user_id != $reply->user_id) {
             $user->notify(new LikeNotification($reply));
         }
-
-        //Makes it live
-        broadcast(new LikeEvent($reply->id, 1))->toOthers();
     }
 
     public function unlikeIt(Reply $reply)
-    {
+    {   //Removes Like
         $reply->likes()->where('user_id', auth()->id())->first()->delete();
 
-        broadcast(new LikeEvent($reply->id, 0))->toOthers();
+        //Makes it live
+        broadcast(new RemoveLikeEvent($reply->id))->toOthers();
     }
 
     public function getReplies(Reply $reply)

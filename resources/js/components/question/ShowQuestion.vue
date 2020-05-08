@@ -86,6 +86,21 @@
                     this.replies.splice(index, 1)
                 })
 
+                Echo.private('App.User.' + User.id())
+                    .notification((notification) => {
+                        if(notification.reply) {
+                            this.question.replies.unshift(notification.reply)
+                        }
+                    })
+
+                Echo.channel('removeReplyChannel')
+                    .listen('RemoveReplyEvent', (e) => {
+                        for(let index = 0; index< this.replies.length; index++) {
+                            if(this.replies[index].id == e.id) {
+                                this.replies.splice(index, 1)
+                            }
+                        }
+                    })
             },
         },    
     }

@@ -10,21 +10,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LikeEvent implements ShouldBroadcast
+class RemoveReplyEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $id;
-    public $type;
 
-    public function __construct($id, $type)
+    public function __construct($id)
     {
         $this->id = $id;
-		$this->type = $type;
     }
 
     public function broadcastOn()
     {
-        return new Channel('likeChannel');
+        return new Channel('removeReplyChannel');
     }
 }

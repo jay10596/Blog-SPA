@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\LikeEvent;
+use App\Events\RemoveReplyEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class LikeEventListener
+class RemoveReplyEventListener
 {
     /**
      * Create the event listener.
@@ -21,10 +21,10 @@ class LikeEventListener
     /**
      * Handle the event.
      *
-     * @param  LikeEvent  $event
+     * @param  RemoveReplyEvent  $event
      * @return void
      */
-    public function handle(LikeEvent $event)
+    public function handle(RemoveReplyEvent $event)
     {
         //
     }

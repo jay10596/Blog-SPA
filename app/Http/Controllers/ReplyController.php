@@ -8,6 +8,7 @@ use App\Question;
 use Illuminate\Http\Request;
 use App\Http\Resources\ReplyResource;
 use App\Notifications\ReplyNotification;
+use App\Events\RemoveReplyEvent;
 
 
 class ReplyController extends Controller
@@ -28,11 +29,12 @@ class ReplyController extends Controller
     }
     
     public function store(Question $question, Request $request)
-    {
+    {   //Stores reply
         $request['user_id'] = auth()->user()->id;
 
         $reply = $question->replies()->create($request->all());
 
+        //Sends notification
         $user = $question->user;
         
         if($reply->user_id != $question->user_id) {
@@ -52,6 +54,9 @@ class ReplyController extends Controller
     public function destroy(Question $question,Reply $reply)
     {
         $reply->delete();
+
+        //Makes it live
+        broadcast(new RemoveReplyEvent($reply->id))->toOthers();
         
         return response('Deleted', 204);
     }

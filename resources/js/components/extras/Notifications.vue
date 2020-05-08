@@ -77,7 +77,14 @@
                                 this.unreadCount --
                             })
                     } 
-                })
+                }),
+
+                Echo.private('App.User.' + User.id())
+                    .notification((notification) => {
+                        this.unread.unshift(notification)
+                        this.unreadCount ++
+                        //console.log(notification.type)
+                    });
             },
         }
     }

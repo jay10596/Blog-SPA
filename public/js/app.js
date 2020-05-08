@@ -7298,6 +7298,15 @@ __webpack_require__.r(__webpack_exports__);
       return this.favourited ? 'text-red-500' : 'text-gray-700';
     }
   },
+  created: function created() {
+    var _this = this;
+
+    Echo.channel('favouriteChannel').listen('FavouriteEvent', function (e) {
+      if (_this.slug == e.slug) {
+        e.type == 1 ? _this.count++ : _this.count--;
+      }
+    });
+  },
   methods: {
     favouriteIt: function favouriteIt() {
       if (User.loggedIn()) {
@@ -7308,19 +7317,19 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     addFavourite: function addFavourite() {
-      var _this = this;
+      var _this2 = this;
 
       axios.post("/api/questions/".concat(this.slug, "/favourite")).then(function (res) {
-        return _this.count++;
+        return _this2.count++;
       })["catch"](function (errors) {
         return console.log(errors);
       });
     },
     removeFavourite: function removeFavourite() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios["delete"]("/api/questions/".concat(this.slug, "/favourite")).then(function (res) {
-        return _this2.count--;
+        return _this3.count--;
       })["catch"](function (errors) {
         return console.log(errors);
       });
@@ -7487,11 +7496,13 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    Echo.channel('likeChannel').listen('LikeEvent', function (e) {
+    Echo["private"]('App.User.' + User.id()).notification(function (notification) {
+      _this.count++;
+    });
+    Echo.channel('removeLikeChannel').listen('RemoveLikeEvent', function (e) {
       if (_this.reply.id == e.id) {
-        e.type == 1 ? _this.count++ : _this.count--;
-      } //console.log(e);
-
+        _this.count--;
+      }
     });
   },
   methods: {
@@ -7772,6 +7783,10 @@ __webpack_require__.r(__webpack_exports__);
             _this2.unreadCount--;
           });
         }
+      }), Echo["private"]('App.User.' + User.id()).notification(function (notification) {
+        _this2.unread.unshift(notification);
+
+        _this2.unreadCount++; //console.log(notification.type)
       });
     }
   }
@@ -8529,6 +8544,18 @@ __webpack_require__.r(__webpack_exports__);
       });
       EventBus.$on('deletingReply', function (index) {
         _this.replies.splice(index, 1);
+      });
+      Echo["private"]('App.User.' + User.id()).notification(function (notification) {
+        if (notification.reply) {
+          _this.question.replies.unshift(notification.reply);
+        }
+      });
+      Echo.channel('removeReplyChannel').listen('RemoveReplyEvent', function (e) {
+        for (var index = 0; index < _this.replies.length; index++) {
+          if (_this.replies[index].id == e.id) {
+            _this.replies.splice(index, 1);
+          }
+        }
       });
     }
   }
@@ -51224,7 +51251,12 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: 'c9a5e8ca8c9d8dfcd906',
   cluster: 'ap4',
-  useTLS: true
+  useTLS: true,
+  auth: {
+    headers: {
+      Authorization: JwtToken
+    }
+  }
 });
 
 /***/ }),

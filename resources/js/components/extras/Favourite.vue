@@ -18,6 +18,15 @@
             }
         },
 
+        created() {
+            Echo.channel('favouriteChannel')
+                .listen('FavouriteEvent', (e) => {
+                    if(this.slug == e.slug) {
+                        e.type == 1? this.count ++ : this.count --
+                    }
+                });
+        },
+
         methods: {
             favouriteIt() {
                 if(User.loggedIn()) {

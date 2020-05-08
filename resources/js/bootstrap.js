@@ -18,5 +18,10 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: 'c9a5e8ca8c9d8dfcd906',
     cluster: 'ap4',
-    useTLS: true
+    useTLS: true,
+    auth: {
+        headers: {
+            Authorization: JwtToken
+        }
+    }
 });
