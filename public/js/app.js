@@ -6617,6 +6617,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -6628,22 +6650,54 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       questions: '',
-      categories: ''
+      categories: '',
+      pagination: {}
     };
   },
+  computed: {
+    prevDisable: function prevDisable() {
+      return this.pagination.prev_page_url ? 'text-blue-800 bg-white hover:text-blue-500 hover:border-blue-500' : 'cursor-not-allowed text-gray-500 bg-gray-100';
+    },
+    nextDisable: function nextDisable() {
+      return this.pagination.next_page_url ? 'text-blue-800 bg-white hover:text-blue-500 hover:border-blue-500' : 'cursor-not-allowed text-gray-500 bg-gray-100';
+    }
+  },
   created: function created() {
-    var _this = this;
+    this.getQuestions();
+    this.getCategories();
+  },
+  methods: {
+    getQuestions: function getQuestions(page_url) {
+      var _this = this;
 
-    axios.get('api/questions').then(function (res) {
-      return _this.questions = res.data.data;
-    })["catch"](function (errors) {
-      return console.log(errors);
-    });
-    axios.get('api/categories').then(function (res) {
-      return _this.categories = res.data.data;
-    })["catch"](function (errors) {
-      return console.log(errors);
-    });
+      page_url = page_url || 'api/questions';
+      axios.get(page_url).then(function (res) {
+        _this.questions = res.data.data;
+
+        _this.makePagination(res.data.meta, res.data.links);
+      })["catch"](function (errors) {
+        return console.log(errors);
+      });
+    },
+    makePagination: function makePagination(meta, links) {
+      this.pagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        next_page_url: links.next,
+        prev_page_url: links.prev,
+        first_page_url: links.first,
+        last_page_url: links.last
+      };
+    },
+    getCategories: function getCategories() {
+      var _this2 = this;
+
+      axios.get('api/categories').then(function (res) {
+        return _this2.categories = res.data.data;
+      })["catch"](function (errors) {
+        return console.log(errors);
+      });
+    }
   }
 });
 
@@ -32568,35 +32622,151 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "flex justify-center" }, [
-    _c(
-      "div",
-      { staticClass: "w-4/6" },
-      _vm._l(_vm.questions, function(question) {
-        return _c(
-          "div",
-          { key: question.id },
-          [_c("QuestionCard", { attrs: { question: question } })],
-          1
-        )
-      }),
-      0
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "w-2/6" }, [
+  return _c("div", [
+    _c("div", { staticClass: "flex justify-center" }, [
       _c(
         "div",
-        { staticClass: "flex flex-wrap justify-center overflow-auto h-96" },
-        _vm._l(_vm.categories, function(category) {
-          return _c(
+        { staticClass: "w-4/6" },
+        [
+          _vm._l(_vm.questions, function(question) {
+            return _c(
+              "div",
+              { key: question.id },
+              [_c("QuestionCard", { attrs: { question: question } })],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _c(
             "div",
-            { key: category.id },
-            [_c("CategoryBox", { attrs: { category: category } })],
-            1
+            {
+              staticClass:
+                "flex justify-between m-3 my-5 rounded w-auto font-sans"
+            },
+            [
+              _c("div", [
+                _c(
+                  "a",
+                  {
+                    staticClass:
+                      "block text-blue-800 bg-white hover:text-blue-500 hover:border-blue-500 border border-gray-400 px-3 py-2 rounded",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        return _vm.getQuestions(_vm.pagination.first_page_url)
+                      }
+                    }
+                  },
+                  [_vm._v("First")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", [
+                _c("ul", { staticClass: "flex justify-center" }, [
+                  _c(
+                    "li",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.getQuestions(_vm.pagination.prev_page_url)
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass:
+                            "block border border-gray-300 px-3 py-2 rounded",
+                          class: _vm.prevDisable,
+                          attrs: { href: "#" }
+                        },
+                        [_c("i", { staticClass: "fas fa-backward" })]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("li", [
+                    _c(
+                      "a",
+                      {
+                        staticClass:
+                          "cursor-not-allowed block text-blue-800 bg-white border border-gray-400 px-3 py-2 rounded",
+                        attrs: { href: "#" }
+                      },
+                      [
+                        _vm._v(
+                          "Page " +
+                            _vm._s(_vm.pagination.current_page) +
+                            " of " +
+                            _vm._s(_vm.pagination.last_page)
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "li",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.getQuestions(_vm.pagination.next_page_url)
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass:
+                            "block border border-gray-300 px-3 py-2 rounded",
+                          class: _vm.nextDisable,
+                          attrs: { href: "#" }
+                        },
+                        [_c("i", { staticClass: "fas fa-forward" })]
+                      )
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", [
+                _c(
+                  "a",
+                  {
+                    staticClass:
+                      "block text-blue-800 bg-white hover:text-blue-500 hover:border-blue-500 border border-gray-400 px-3 py-2 rounded",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        return _vm.getQuestions(_vm.pagination.last_page_url)
+                      }
+                    }
+                  },
+                  [_vm._v("Last")]
+                )
+              ])
+            ]
           )
-        }),
-        0
-      )
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "w-2/6" }, [
+        _c(
+          "div",
+          { staticClass: "flex flex-wrap justify-center overflow-auto h-96" },
+          _vm._l(_vm.categories, function(category) {
+            return _c(
+              "div",
+              { key: category.id },
+              [_c("CategoryBox", { attrs: { category: category } })],
+              1
+            )
+          }),
+          0
+        )
+      ])
     ])
   ])
 }
