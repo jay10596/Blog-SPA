@@ -85,6 +85,7 @@
                     .then(res => {
                         this.user = res.data
                         this.userForm = this.user
+                        this.userForm.birthday = this.userForm.birthday.substr(0,10) //Because birthday contains timestamp as well
                     })
                     .catch(errors => console.log(errors))
             },
@@ -96,17 +97,9 @@
             },
 
             editUser() {
-                this.errors = {}
                 axios.put(`/api/users/${this.user.id}`, this.userForm)
                     .then(res => window.location = '/')
-                    .catch(errors => {
-                        this.errors = errors.response.data.errors
-
-                        if(errors.response.status === 500)
-                        {
-                            window.location = '/'
-                        }
-                    })
+                    .catch(errors => this.errors = errors.response.data.errors)
             },
         }
     }

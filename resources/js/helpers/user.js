@@ -18,7 +18,7 @@ class User {
         const storedToken = Storage.getToken()
         
         if(storedToken){
-            return Token.isValid(storedToken) ? true : false
+            return Token.isValid(storedToken) ? true : this.logout()
         }
 
         return false
@@ -49,6 +49,10 @@ class User {
 
     own(id) {
         return this.id() == id
+    }
+
+    admin() {
+        return this.id() == 10
     }
 }
 

@@ -20,6 +20,11 @@ class User extends Authenticatable implements JWTSubject
 
     use Searchable; //For Scout
 
+    public function toSearchableArray() //For Scout if you get mb_strtolower() expects parameter 1 to be string, array given in Tokenizer.php error
+    {
+        return [];
+    }
+
     protected $fillable = [
         'name', 'email', 'password', 'birthday', 'avatar'
     ];

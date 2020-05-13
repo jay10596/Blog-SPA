@@ -8,7 +8,8 @@ import '@fortawesome/fontawesome-free/js/all.js'
 import User from './helpers/user.js';
 window.User = User
 
-console.log(User.id());
+import Exception from './helpers/exception.js';
+window.Exception = Exception
 
 window.EventBus = new Vue();
 

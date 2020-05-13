@@ -61,6 +61,7 @@
                         this.unread = res.data.unread
                         this.unreadCount = res.data.unread.length
                     })
+                    .catch(error => Exception.handle(error))
             },
 
             listen() {
@@ -83,7 +84,6 @@
                     .notification((notification) => {
                         this.unread.unshift(notification)
                         this.unreadCount ++
-                        //console.log(notification.type)
                     });
             },
         }

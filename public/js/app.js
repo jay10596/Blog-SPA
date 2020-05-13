@@ -7817,6 +7817,8 @@ __webpack_require__.r(__webpack_exports__);
         _this.read = res.data.read;
         _this.unread = res.data.unread;
         _this.unreadCount = res.data.unread.length;
+      })["catch"](function (error) {
+        return Exception.handle(error);
       });
     },
     listen: function listen() {
@@ -7840,7 +7842,7 @@ __webpack_require__.r(__webpack_exports__);
       }), Echo["private"]('App.User.' + User.id()).notification(function (notification) {
         _this2.unread.unshift(notification);
 
-        _this2.unreadCount++; //console.log(notification.type)
+        _this2.unreadCount++;
       });
     }
   }
@@ -8268,7 +8270,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       categories: {},
       user: {},
-      errors: {}
+      errors: {},
+      errorMode: false
     };
   },
   created: function created() {
@@ -8296,8 +8299,29 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/api/questions', this.questionForm).then(function (res) {
         return _this2.$router.push('/');
       })["catch"](function (error) {
-        return _this2.errors = error.response.data.errors;
+        _this2.errorMode = true;
+        _this2.errors = error.response.data.errors;
       });
+    }
+  },
+  watch: {
+    'questionForm.title': function questionFormTitle(newValue, oldValue) {
+      if (newValue != null) {
+        this.errorMode = true;
+        this.errors.title[0] = null;
+      }
+    },
+    'questionForm.body': function questionFormBody(newValue, oldValue) {
+      if (newValue != null) {
+        this.errorMode = true;
+        this.errors.body[0] = null;
+      }
+    },
+    'questionForm.category_id': function questionFormCategory_id(newValue, oldValue) {
+      if (newValue != null) {
+        this.errorMode = true;
+        this.errors.category_id[0] = null;
+      }
     }
   }
 });
@@ -8780,6 +8804,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/api/auth/me').then(function (res) {
         _this.user = res.data;
         _this.userForm = _this.user;
+        _this.userForm.birthday = _this.userForm.birthday.substr(0, 10); //Because birthday contains timestamp as well
       })["catch"](function (errors) {
         return console.log(errors);
       });
@@ -8794,15 +8819,10 @@ __webpack_require__.r(__webpack_exports__);
     editUser: function editUser() {
       var _this3 = this;
 
-      this.errors = {};
       axios.put("/api/users/".concat(this.user.id), this.userForm).then(function (res) {
         return window.location = '/';
       })["catch"](function (errors) {
-        _this3.errors = errors.response.data.errors;
-
-        if (errors.response.status === 500) {
-          window.location = '/';
-        }
+        return _this3.errors = errors.response.data.errors;
       });
     }
   }
@@ -35118,7 +35138,7 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _vm.errors.title
+            _vm.errorMode
               ? _c(
                   "span",
                   {
@@ -35176,7 +35196,7 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _vm.errors.body
+            _vm.errorMode
               ? _c(
                   "span",
                   {
@@ -35248,7 +35268,7 @@ var render = function() {
               0
             ),
             _vm._v(" "),
-            _vm.errors.category_id
+            _vm.errorMode
               ? _c(
                   "span",
                   {
@@ -51375,6 +51395,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fortawesome/fontawesome-free/js/all.js */ "./node_modules/@fortawesome/fontawesome-free/js/all.js");
 /* harmony import */ var _fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_js_all_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _helpers_user_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./helpers/user.js */ "./resources/js/helpers/user.js");
+/* harmony import */ var _helpers_exception_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./helpers/exception.js */ "./resources/js/helpers/exception.js");
 
 
 
@@ -51382,7 +51403,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 window.User = _helpers_user_js__WEBPACK_IMPORTED_MODULE_5__["default"];
-console.log(_helpers_user_js__WEBPACK_IMPORTED_MODULE_5__["default"].id());
+
+window.Exception = _helpers_exception_js__WEBPACK_IMPORTED_MODULE_6__["default"];
 window.EventBus = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
@@ -53570,6 +53592,50 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/helpers/exception.js":
+/*!*******************************************!*\
+  !*** ./resources/js/helpers/exception.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _user_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./user.js */ "./resources/js/helpers/user.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var Exception = /*#__PURE__*/function () {
+  function Exception() {
+    _classCallCheck(this, Exception);
+  }
+
+  _createClass(Exception, [{
+    key: "handle",
+    value: function handle(error) {
+      this.isExpired(error.response.data.error);
+    }
+  }, {
+    key: "isExpired",
+    value: function isExpired(error) {
+      if (error = 'Token is invalid') {
+        _user_js__WEBPACK_IMPORTED_MODULE_0__["default"].logout();
+      }
+    }
+  }]);
+
+  return Exception;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Exception = new Exception());
+
+/***/ }),
+
 /***/ "./resources/js/helpers/storage.js":
 /*!*****************************************!*\
   !*** ./resources/js/helpers/storage.js ***!
@@ -53719,7 +53785,7 @@ var User = /*#__PURE__*/function () {
       var storedToken = _storage__WEBPACK_IMPORTED_MODULE_1__["default"].getToken();
 
       if (storedToken) {
-        return _token__WEBPACK_IMPORTED_MODULE_0__["default"].isValid(storedToken) ? true : false;
+        return _token__WEBPACK_IMPORTED_MODULE_0__["default"].isValid(storedToken) ? true : this.logout();
       }
 
       return false;
@@ -53755,6 +53821,11 @@ var User = /*#__PURE__*/function () {
     key: "own",
     value: function own(id) {
       return this.id() == id;
+    }
+  }, {
+    key: "admin",
+    value: function admin() {
+      return this.id() == 10;
     }
   }]);
 

@@ -21,7 +21,7 @@
                 <div class="col-md-6">
                     <input v-model="questionForm.title" class="pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline" type="text" placeholder="Add the title">
 
-                    <span v-if="errors.title" class="text-red-700 pt-1 text-sm" role="alert">
+                    <span v-if="errorMode" class="text-red-700 pt-1 text-sm" role="alert">
                         {{errors.title[0]}}
                     </span>
                 </div>
@@ -34,7 +34,7 @@
                     <textarea v-model="questionForm.body" rows="3" class="pt-8 w-full rounded bg-transparent shadow-2xl p-2 appearance-none text-gray-700 border focus:outline-none focus:shadow-outline" type="text" placeholder="Write the description">
                     
                     </textarea>
-                    <span v-if="errors.body" class="text-red-700 pt-1 text-sm" role="alert">
+                    <span v-if="errorMode" class="text-red-700 pt-1 text-sm" role="alert">
                         {{errors.body[0]}}
                     </span>
                 </div>
@@ -48,7 +48,7 @@
                         <option v-for="category in categories" :key="category.id" :value="category.id">{{category.name}}</option>
                     </select>
                     
-                    <span v-if="errors.category_id" class="text-red-700 pt-1 text-sm" role="alert">
+                    <span v-if="errorMode" class="text-red-700 pt-1 text-sm" role="alert">
                         {{errors.category_id[0]}}
                     </span>
                 </div>
@@ -84,7 +84,8 @@
                 },
                 categories: {},
                 user: {},
-                errors: {}
+                errors: {},
+                errorMode: false
             }
         },
 
@@ -108,7 +109,33 @@
             createQuestion() {
                 axios.post('/api/questions', this.questionForm)
                     .then(res => this.$router.push('/'))
-                    .catch(error => this.errors = error.response.data.errors)
+                    .catch(error => {
+                        this.errorMode = true
+                        this.errors = error.response.data.errors
+                    })
+            }
+        },
+
+        watch: {
+            'questionForm.title'(newValue,oldValue) {
+                if(newValue != null) {
+                    this.errorMode = true
+                    this.errors.title[0] = null
+                }
+            },
+
+            'questionForm.body'(newValue,oldValue) {
+                if(newValue != null) {
+                    this.errorMode = true
+                    this.errors.body[0] = null
+                }
+            },
+            
+            'questionForm.category_id'(newValue,oldValue) {
+                if(newValue != null) {
+                    this.errorMode = true
+                    this.errors.category_id[0] = null
+                }
             }
         }
     }
