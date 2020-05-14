@@ -31,7 +31,7 @@
         data(){
             return {
                 items: [
-                    {title: 'Home', icon: 'fas fa-home', to: '/', show: true},
+                    {title: 'This Month', icon: 'fas fa-calendar-alt', to: '/thismonthquestions', show: true},
                     {title: 'Login', icon: 'fas fa-sign-in-alt', to: '/login', show: !User.loggedIn()},
                     {title: 'Register', icon: 'fas fa-user-plus', to: '/register', show: !User.loggedIn()},
                     {title: 'Edit Profile', icon: 'fas fa-user-cog', to: '/edituser', show: User.loggedIn()},

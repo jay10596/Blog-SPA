@@ -12,6 +12,7 @@ import FavouriteQuestions from '../components/user/FavouriteQuestions'
 
 import CreateQuestion from '../components/question/CreateQuestion'
 import QuestionReplies from '../components/question/QuestionReplies'
+import ThisMonthQuestions from '../components/question/ThisMonthQuestions'
 
 import CategoryCRUD from '../components/category/CategoryCRUD'
 import CategoryQuestions from '../components/category/CategoryQuestions'
@@ -32,6 +33,8 @@ export default new VueRouter({
 
         { path: '/createquestion', component: CreateQuestion},
         { path: '/questions/:slug', component: QuestionReplies},
+        { path: '/thismonthquestions', component: ThisMonthQuestions},
+
 
         { path: '/categories', component: CategoryCRUD},
         { path: '/categories/:slug', component: CategoryQuestions},
